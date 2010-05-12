@@ -101,3 +101,39 @@ inline GLenum glGetError()
 
 	return Result;
 }
+
+inline GLvoid glEnable(GLenum cap)
+{
+#ifdef GLO_DEBUG
+	if(!glo::detail::Enable)
+		OutputDebugString("glEnable implementation not found");
+#endif//GLO_DEBUG
+
+	assert(glo::detail::Enable);
+	glo::detail::Enable(cap);
+
+#ifdef GLO_DEBUG
+	gloCheckError("glEnable");
+#endif//GLO_DEBUG
+
+	return Result;
+}
+
+inline GLvoid glDisable(GLenum cap)
+{
+#ifdef GLO_DEBUG
+	if(!glo::detail::Disable)
+		OutputDebugString("glDisable implementation not found");
+#endif//GLO_DEBUG
+
+	assert(glo::detail::Disable);
+	glo::detail::Disable(cap);
+
+#ifdef GLO_DEBUG
+	gloCheckError("glDisable");
+#endif//GLO_DEBUG
+
+	return Result;
+}
+
+
