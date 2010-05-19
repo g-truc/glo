@@ -22,29 +22,6 @@ namespace detail
 
 }//namespace detail
 
-	enum version
-	{
-		VERSION_100,
-		VERSION_110,
-		VERSION_120,
-		VERSION_130,
-		VERSION_140,
-		VERSION_150,
-		VERSION_200,
-		VERSION_210,
-		VERSION_300,
-		VERSION_310,
-		VERSION_320,
-		VERSION_330,
-		VERSION_400
-	};
-
-	enum profile
-	{
-		CORE,
-		COMPATIBILITY
-	};
-
 	void* getProcAddress(char const * Function);
 
 }//namespace glo

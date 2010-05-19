@@ -11,7 +11,6 @@
 #define glo_core_included
 
 #include "common.hpp"
-#include "common.hpp"
 #include "core100.hpp"
 #include "core110.hpp"
 #include "core120.hpp"

@@ -10,6 +10,37 @@
 #ifndef glo_included
 #define glo_included
 
+namespace glo
+{
+	enum profile
+	{
+		CORE,
+		COMPATIBILITY,
+		NVIDIA,
+		AMD
+	};
+
+	enum version
+	{
+		VERSION_100,
+		VERSION_110,
+		VERSION_120,
+		VERSION_130,
+		VERSION_140,
+		VERSION_150,
+		VERSION_200,
+		VERSION_210,
+		VERSION_300,
+		VERSION_310,
+		VERSION_320,
+		VERSION_330,
+		VERSION_400
+	};
+
+	void init(profile Profile, version Version);
+
+} //namespace glo
+
 #include "core/core.hpp"
 #include "compatibility/compatibility.hpp"
 #include "detail/init.hpp"
