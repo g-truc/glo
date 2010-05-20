@@ -2,7 +2,7 @@
 // OpenGL Overload Copyright (c) 2010 - 2010 G-Truc Creation (www.g-truc.net)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Created : 2010-03-05
-// Updated : 2010-03-05
+// Updated : 2010-05-20
 // Licence : This source is under MIT License
 // File    : glo/core/core100.inl
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,28 +52,69 @@ namespace detail
     PFNGLGETINTEGERVPROC GetIntegerv = 0;
     PFNGLGETSTRINGPROC glGetString = 0;
     PFNGLGETTEXIMAGEPROC GetTexImage = 0;
-    GetTexParameterfv = 0;
-    GetTexParameteriv = 0;
-    GetTexLevelParameterfv = 0;
-    GetTexLevelParameteriv = 0;
-    IsEnabled = 0;
-    DepthRange = 0;
-    Viewport = 0;
+    PFNGLGETTEXPARAMETERFVPROC GetTexParameterfv = 0;
+    PFNGLGETTEXPARAMETERIVPROC GetTexParameteriv = 0;
+    PFNGLGETTEXLEVELPARAMETERFVPROC GetTexLevelParameterfv = 0;
+    PFNGLGETTEXLEVELPARAMETERIVPROC GetTexLevelParameteriv = 0;
+    PFNGLISENABLEDPROC IsEnabled = 0;
+    PFNGLDEPTHRANGEPROC DepthRange = 0;
+    PFNGLVIEWPORTPROC Viewport = 0;
 
-
-
-    PFNGLGETTEXPARAMETERFVPROC
-    PFNGLGETTEXPARAMETERIVPROC
-    PFNGLGETTEXLEVELPARAMETERFVPROC
-    PFNGLGETTEXLEVELPARAMETERIVPROC
-    PFNGLISENABLEDPROC
-    PFNGLDEPTHRANGEPROC
-    PFNGLVIEWPORTPROC
-
-	inline void init110Core()
+        inline void init100Core()
 	{
 		CullFace = (PFNGLCULLFACEPROC)glo::getProcAddress("glCullFace");
 		GetError = (PFNGLGETERRORPROC)glo::getProcAddress("glGetError");
+
+                CullFace = (PFNGLCULLFACEPROC)glo::getProcAddress("glCullFace");
+                FrontFace = (PFNGLFRONTFACEPROC)glo::getProcAddress("glFrontFace");
+                Hint = (PFNGLHINTPROC)glo::getProcAddress("glHint");
+                LineWidth = (PFNGLLINEWIDTHPROC)glo::getProcAddress("glLineWidth");
+                PointSize = (PFNGLPOINTSIZEPROC)glo::getProcAddress("glPointSize");
+                PolygonMode = (PFNGLPOLYGONMODEPROC)glo::getProcAddress("glPolygonMode");
+                Scissor = (PFNGLSCISSORPROC)glo::getProcAddress("glScissor");
+                TexParameterf = (PFNGLTEXPARAMETERFPROC)glo::getProcAddress("glTexParameterf");
+                TexParameterfv = (PFNGLTEXPARAMETERFVPROC)glo::getProcAddress("glTexParameterfv");
+                TexParameteri = (PFNGLTEXPARAMETERIPROC)glo::getProcAddress("glTexParameteri");
+                TexParameteriv = (PFNGLTEXPARAMETERIVPROC)glo::getProcAddress("glTexParameteriv");
+                TexImage1D = (PFNGLTEXIMAGE1DPROC)glo::getProcAddress("glTexImage1D");
+                TexImage2D = (PFNGLTEXIMAGE2DPROC)glo::getProcAddress("glTexImage2D");
+                DrawBuffer = (PFNGLDRAWBUFFERPROC)glo::getProcAddress("glDrawBuffer");
+                Clear = (PFNGLCLEARPROC)glo::getProcAddress("glClear");
+                ClearColor = (PFNGLCLEARCOLORPROC)glo::getProcAddress("glClearColor");
+                ClearStencil = (PFNGLCLEARSTENCILPROC)glo::getProcAddress("glClearStencil");
+                ClearDepth = (PFNGLCLEARDEPTHPROC)glo::getProcAddress("glClearDepth");
+                StencilMask = (PFNGLSTENCILMASKPROC)glo::getProcAddress("glStencilMask");
+                ColorMask = (PFNGLCOLORMASKPROC)glo::getProcAddress("glColorMask");
+                DepthMask = (PFNGLDEPTHMASKPROC)glo::getProcAddress("glDepthMask");
+                Disable = (PFNGLDISABLEPROC)glo::getProcAddress("glDisable");
+                Enable = (PFNGLENABLEPROC)glo::getProcAddress("glEnable");
+                Finish = (PFNGLFINISHPROC)glo::getProcAddress("glFinish");
+                Flush = (PFNGLFLUSHPROC)glo::getProcAddress("glFlush");
+                BlendFunc = (PFNGLBLENDFUNCPROC)glo::getProcAddress("glBlendFunc");
+                LogicOp = (PFNGLLOGICOPPROC)glo::getProcAddress("glLogicOp");
+                StencilFunc = (PFNGLSTENCILFUNCPROC)glo::getProcAddress("glStencilFunc");
+                StencilOp = (PFNGLSTENCILOPPROC)glo::getProcAddress("glStencilOp");
+                DepthFunc = (PFNGLDEPTHFUNCPROC)glo::getProcAddress("glDepthFunc");
+                PixelStoref = (PFNGLPIXELSTOREFPROC)glo::getProcAddress("glPixelStoref");
+                PixelStorei = (PFNGLPIXELSTOREIPROC)glo::getProcAddress("glPixelStorei");
+                ReadBuffer = (PFNGLREADBUFFERPROC)glo::getProcAddress("glReadBuffer");
+                ReadPixels = (PFNGLREADPIXELSPROC)glo::getProcAddress("glReadPixels");
+                GetBooleanv = (PFNGLGETBOOLEANVPROC)glo::getProcAddress("glGetBooleanv");
+
+
+                PFNGLGETDOUBLEVPROC GetDoublev = 0;
+                PFNGLGETERRORPROC GetError = 0;
+                PFNGLGETFLOATVPROC GetFloatv = 0;
+                PFNGLGETINTEGERVPROC GetIntegerv = 0;
+                PFNGLGETSTRINGPROC glGetString = 0;
+                PFNGLGETTEXIMAGEPROC GetTexImage = 0;
+                PFNGLGETTEXPARAMETERFVPROC GetTexParameterfv = 0;
+                PFNGLGETTEXPARAMETERIVPROC GetTexParameteriv = 0;
+                PFNGLGETTEXLEVELPARAMETERFVPROC GetTexLevelParameterfv = 0;
+                PFNGLGETTEXLEVELPARAMETERIVPROC GetTexLevelParameteriv = 0;
+                PFNGLISENABLEDPROC IsEnabled = 0;
+                PFNGLDEPTHRANGEPROC DepthRange = 0;
+                PFNGLVIEWPORTPROC Viewport = 0;
 	}
 
 	inline void error(char const * Function)
