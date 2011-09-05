@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<spec>
+  <token name="READ_ONLY" value="0x88B8" version="150" />
+  <token name="WRITE_ONLY" value="0x88B9" version="150" />
+  <token name="READ_WRITE" value="0x88BA" version="150" />
+  
+  <command name="BindImageTexture" return="void" man="http://www.opengl.org/sdk/docs/man4/xhtml/glBindImageTexture.xml">
+    <spec name="gl" version="420" deprecated="no" removed="no" limited="no" />
+    
+    <param name="unit" type="uint" />
+    <param name="texture" type="uint" />
+    <param name="level" type="int" />
+    <param name="layered" type="boolean" />
+    <param name="layer" type="int" />
+    <param name="access" type="enum">
+      <arg name="READ_ONLY" version="420" deprecated="no" removed="no" limited="no" />
+      <arg name="WRITE_ONLY" version="420" deprecated="no" removed="no" limited="no" />
+      <arg name="READ_WRITE" version="420" deprecated="no" removed="no" limited="no" />
+    </param>
+    <param name="format" type="enum" />
+  </command>
+
+  <command name="Uniform1i" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glUniform.xml">
+    <spec name="gl" version="200" deprecated="no" removed="no" limited="420" />
+    <spec name="es" version="200" deprecated="no" removed="no" limited="no" />
+  </command>
+
+  <extension name="ARB_shader_image_load_store">
+    <command name="BindImageTexture" />
+  </extension>
+</spec>
