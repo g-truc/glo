@@ -30,6 +30,7 @@
   
   <xsl:template match="spec">
     <xsl:param name="Name" select="./@name" />
+    
     <xsl:choose>
       <xsl:when test="$Profile=$profile-limited">
         <xsl:apply-templates select="./version[@name=$Version]" />
@@ -98,6 +99,10 @@
     <!-- Versions -->
     <xsl:value-of select="concat('// Declare supported versions of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:apply-templates select="./spec[@name=$Spec]" />
+    <xsl:text>&#10;</xsl:text>
+
+    <!-- Extensions -->
+    <xsl:value-of select="concat('// Declare supported ', ./spec[./@name=$Spec]/@label, ' extensions &#10;')" />
     <xsl:text>&#10;</xsl:text>
     
     <!-- Types -->
