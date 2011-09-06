@@ -12,16 +12,16 @@
     <version name="101" major="1" minor="0" revision="1" />
   </spec>
   <spec name="gl" label="OpenGL" api-ns="gl" spec-ns="gl">
-    <version name="100" major="1" minor="0" compatiblity="yes" />
-    <version name="110" major="1" minor="1" compatiblity="yes" />
-    <version name="120" major="1" minor="2" compatiblity="yes" />
-    <version name="130" major="1" minor="3" compatiblity="yes" />
-    <version name="140" major="1" minor="4" compatiblity="yes" />
-    <version name="150" major="1" minor="5" compatiblity="yes" />
-    <version name="200" major="2" minor="0" compatiblity="yes" />
-    <version name="210" major="2" minor="1" compatiblity="yes" />
-    <version name="300" major="3" minor="0" compatiblity="yes" />
-    <version name="310" major="3" minor="1" compatiblity="yes" />
+    <version name="100" major="1" minor="0" />
+    <version name="110" major="1" minor="1" />
+    <version name="120" major="1" minor="2" />
+    <version name="130" major="1" minor="3" />
+    <version name="140" major="1" minor="4" />
+    <version name="150" major="1" minor="5" />
+    <version name="200" major="2" minor="0" />
+    <version name="210" major="2" minor="1" />
+    <version name="300" major="3" minor="0" />
+    <version name="310" major="3" minor="1" />
     <version name="320" major="3" minor="2" compatiblity="yes" core="yes" />
     <version name="330" major="3" minor="3" compatiblity="yes" core="yes" />
     <version name="400" major="4" minor="0" compatiblity="yes" core="yes" />

@@ -23,7 +23,7 @@
   <xsl:param name="profile-limited" select="'limited'" />
 
   <!-- Processing parameters -->
-  <xsl:param name="Spec" select="$spec-es" />
+  <xsl:param name="Spec" select="$spec-gl" />
   <xsl:param name="Version" select="'200'" />
   <xsl:param name="Profile" select="$profile-comp" />
 
@@ -95,21 +95,34 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template name="header_guard">
+		<xsl:variable name="Namespace" select="translate(/lang/spec[@name=$Spec]/@spec-ns, $uppercase, $smallcase)" />
+		<xsl:variable name="ProfileLimited" select="/lang/spec[@name=$Spec]/version[$Version=./@name]/@limited" />
+		<xsl:variable name="ProfileCore" select="/lang/spec[@name=$Spec]/version[$Version=./@name]/@core" />
+		<xsl:variable name="ProfileComp" select="/lang/spec[@name=$Spec]/version[$Version=./@name]/@compatiblity" />
+
+		<xsl:value-of select="concat('__', $Namespace, '_', $Version)" />
+		<xsl:if test="($ProfileLimited='yes') or ($ProfileCore='yes') or ($ProfileComp='yes')">
+			<xsl:value-of select="concat('_', $Profile)" />
+		</xsl:if>
+		<xsl:value-of select="'__'" />
+	</xsl:template>
+	
   <xsl:template match="lang">
 	  <xsl:variable name="Namespace" select="translate(./spec[@name=$Spec]/@spec-ns, $uppercase, $smallcase)" />
+	  <!--
+	  <xsl:value-of select="concat('#ifndef __', translate(/lang/spec[@name=$Spec]/@spec-ns, $uppercase, $smallcase), '_h_&#10;')" />
+	  <xsl:value-of select="'#error: An OpenGL header is already included&#10;'" />
+	  <xsl:value-of select="concat('#endif//__', translate(/lang/spec[@name=$Spec]/@spec-ns, $uppercase, $smallcase), '_h_&#10;')" />
+	  <xsl:value-of select="'&#10;'" />
+	  -->
 	  
-	  <xsl:choose>
-		  <xsl:when test="$Spec=$spec-gl and (./spec[@name=$Spec]/version[$Version=./@name])">
-			<xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '_', $Profile, '__')" />
-			  <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
-			  <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
-		  </xsl:when>
-		  <xsl:otherwise>
-			 <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '__')" />
-			  <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
-			  <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
-		  </xsl:otherwise>
-	  </xsl:choose>
+	  <xsl:value-of select="'#ifndef '" />
+	  <xsl:call-template name="header_guard" />
+	  <xsl:value-of select="'&#10;'" />
+	  <xsl:value-of select="'#define '" />
+	  <xsl:call-template name="header_guard" />
+	  <xsl:value-of select="'&#10;'" />
 
     <xsl:text>&#10;</xsl:text>
     
@@ -136,16 +149,9 @@
     <xsl:value-of select="concat('// Declare commands of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:text>&#10;</xsl:text>
 
-	  <xsl:choose>
-		  <xsl:when test="$Spec=$spec-gl and (./spec[@name=$Spec]/version[$Version=./@name])">
-			  <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '_', $Profile, '__')" />
-			  <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />
-		  </xsl:when>
-		  <xsl:otherwise>
-			  <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '__')" />
-			  <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />
-		  </xsl:otherwise>
-	  </xsl:choose>
+	  <xsl:value-of select="'#endif//'" />
+	  <xsl:call-template name="header_guard" />
+	  <xsl:value-of select="'&#10;'" />
   </xsl:template>
 
   <xsl:template match="/">
@@ -158,9 +164,8 @@
         
         <xsl:choose>
           <!-- Check valid version for OpenGL only -->
-          <xsl:when test="$SelectedVersion and $Spec=$spec-gl">
+			<!--xsl:when test="$SelectedVersion">
             <xsl:choose>
-              <!-- Check valid profile -->
               <xsl:when test="($SelectedVersion/@compatiblity='yes') and ($Profile=$profile-comp)">
                 <xsl:apply-templates select="./lang" />
               </xsl:when>
@@ -175,10 +180,9 @@
               </xsl:when>
               <xsl:otherwise>
                 <xsl:value-of select="concat('ERROR: Unknown profile of ', $SelectedSpec/@label, ' specification...: ', $Profile, '&#10;')" />
-                <!-- TODO: Added list of the supported profile -->
               </xsl:otherwise>
             </xsl:choose>
-          </xsl:when>
+          </xsl:when-->
           <!-- Check valid version for OpenGL ES and OpenGL SC -->
           <xsl:when test="$SelectedVersion">
             <xsl:apply-templates select="./lang" />
