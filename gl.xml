@@ -1,7 +1,51 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <?xml-stylesheet type="text/xsl" href="./gl-c-api-gen.xsl"?>
 
-<spec>
+<lang>
+  <spec name="es" label="OpenGL ES" upper-ns="GL" lower-ns="gl" version-ns="GL_OSC">
+    <version name="100" major="1" minor="0" />
+    <version name="110" major="1" minor="1" />
+    <version name="200" major="2" minor="0" />
+  </spec>
+  <spec name="sc" label="OpenGL SC" upper-ns="GL" lower-ns="gl" version-ns="GL_ES">
+    <version name="100" major="1" minor="0" />
+    <version name="101" major="1" minor="0" revision="1" />
+  </spec>
+  <spec name="gl" label="OpenGL" upper-ns="GL" lower-ns="gl" version-ns="GL">
+    <version name="100" major="1" minor="0" compatiblity="yes" />
+    <version name="110" major="1" minor="1" compatiblity="yes" />
+    <version name="120" major="1" minor="2" compatiblity="yes" />
+    <version name="121" major="1" minor="2" revision="1" compatiblity="yes" />
+    <version name="130" major="1" minor="3" compatiblity="yes" />
+    <version name="140" major="1" minor="4" compatiblity="yes" />
+    <version name="150" major="1" minor="5" compatiblity="yes" />
+    <version name="200" major="2" minor="0" compatiblity="yes" />
+    <version name="210" major="2" minor="1" compatiblity="yes" />
+    <version name="300" major="3" minor="0" compatiblity="yes" />
+    <version name="310" major="3" minor="1" compatiblity="yes" />
+    <version name="320" major="3" minor="2" compatiblity="yes" core="yes" />
+    <version name="330" major="3" minor="3" compatiblity="yes" core="yes" />
+    <version name="400" major="4" minor="0" compatiblity="yes" core="yes" />
+    <version name="410" major="4" minor="1" compatiblity="yes" core="yes" />
+    <version name="420" major="4" minor="2" compatiblity="yes" core="yes" limited="yes" />
+  </spec>
+
+  <type name="enum" value="unsigned int" version="100" />
+  <type name="boolean" value="unsigned char" version="100" />
+  <type name="bitfield" value="unsigned int" version="100" />
+  <type name="byte" value="signed char" version="100" />
+  <type name="short" value="short" version="100" />
+  <type name="int" value="int" version="100" />
+  <type name="sizei" value="int" version="100" />
+  <type name="ubyte" value="unsigned char" version="100" />
+  <type name="ushort" value="unsigned short" version="100" />
+  <type name="uint" value="unsigned int" version="100" />
+  <type name="float" value="float" version="100" />
+  <type name="float" value="clampf" version="100" />
+  <type name="double" value="double" version="100" />
+  <type name="double" value="clampd" version="100" />
+  <type name="void" value="void" version="100" />
+  
   <type name="char" value="char" version="200" />
   <type name="intptr" value="ptrdiff_t" version="150" />
   <type name="sizeiptr" value="ptrdiff_t" version="150" />
@@ -10,30 +54,30 @@
   <type name="uint64" value="uint64_t" version="300" />
   <type name="sync" value="struct __GLsync *" version="300" />
 
+  <token name="DEPTH_BUFFER_BIT" value="0x00000100" version="100" />
+  <token name="STENCIL_BUFFER_BIT" value="0x00000400" version="100" />
+  <token name="COLOR_BUFFER_BIT" value="0x00004000" version="100" />
 
   <token name="READ_ONLY" value="0x88B8" version="150" />
   <token name="WRITE_ONLY" value="0x88B9" version="150" />
   <token name="READ_WRITE" value="0x88BA" version="150" />
 
   <command name="CullFace" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glCullFace.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
     
     <param name="mode" type="enum">
     </param>
   </command>
 
   <command name="FrontFace" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glFrontFace.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
     
     <param name="mode" type="enum">
     </param>
   </command>
   
   <command name="Hint" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glFrontFace.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="target" type="enum">
     </param>    
@@ -42,8 +86,7 @@
   </command>
  
    <command name="LineWidth" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glLineWidth.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="width" type="float">
     	<arg spec="gl" profile="core" version="310" min="0" max="1" />
@@ -52,8 +95,7 @@
   </command>
  
    <command name="PointSize" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glPointSize.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="size" type="float">
     	<arg min="0" max="???" />
@@ -61,8 +103,7 @@
   </command>
  
    <command name="PolygonMode" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glPolygonMode.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="face" type="enum">
 
@@ -73,8 +114,7 @@
   </command>
  
    <command name="Scissor" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glScissor.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="410" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="410" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="410" />
 
     <param name="x" type="int">
 
@@ -91,8 +131,7 @@
   </command>
 
    <command name="TexParameterf" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="target" type="enum">
 
@@ -106,8 +145,7 @@
   </command>
   
    <command name="TexParameterfv" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml">
-    <spec name="gl" version="100" profile="core" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" version="100" profile="comp" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="target" type="enum">
 
@@ -121,8 +159,7 @@
   </command>
 
    <command name="TexParameteri" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glTexParameter.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="target" type="enum">
 
@@ -137,8 +174,7 @@
   </command>
 
    <command name="TexImage1D" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glTexImage1D.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="420" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="420" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="420" />
 
     <param name="target" type="enum">
 
@@ -159,8 +195,7 @@
   </command>
   
    <command name="TexImage2D" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glTexImage2D.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="420" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="420" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="420" />
 
     <param name="target" type="enum">
 
@@ -182,8 +217,7 @@
   </command>
 
    <command name="DrawBuffer" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glDrawBuffer.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="no" />
 
     <param name="mode" type="enum">
 
@@ -191,8 +225,7 @@
   </command>
   
    <command name="Clear" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glClear.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="mask" type="bitfield">
       <arg name="COLOR_BUFFER_BIT" />
@@ -202,8 +235,7 @@
   </command>
 
    <command name="ClearColor" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glClearColor.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="red" type="clampf" />
     <param name="green" type="clampf" />
@@ -212,29 +244,25 @@
   </command>
 
    <command name="ClearStencil" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glClearStencil.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="s" type="int" />
   </command>
 
    <command name="ClearDepth" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glClearDepth.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="depth" type="clampd" />
   </command>
 
    <command name="StencilMask" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glStencilMask.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="mask" type="uint" />
   </command>
   
    <command name="ColorMask" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glColorMask.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="red" type="boolean" />
     <param name="green" type="boolean" />
@@ -243,15 +271,13 @@
   </command>
 
    <command name="DepthMask" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glDepthMask.xml">
-    <spec name="gl" profile="core" version="100" deprecated="no" removed="no" limited="300" />
-    <spec name="gl" profile="comp" version="100" deprecated="no" removed="no" limited="300" />
+    <spec name="gl" version="100" deprecated="no" removed="no" limited="300" />
 
     <param name="flag" type="boolean" />
   </command>
 
   <command name="BindImageTexture" return="void" man="http://www.opengl.org/sdk/docs/man4/xhtml/glBindImageTexture.xml">
-    <spec name="gl" profile="core" version="420" deprecated="no" removed="no" limited="no" />
-    <spec name="gl" profile="comp" version="420" deprecated="no" removed="no" limited="no" />
+    <spec name="gl" version="420" deprecated="no" removed="no" limited="no" />
     
     <param name="unit" type="uint" />
     <param name="texture" type="uint" />
@@ -259,7 +285,7 @@
     <param name="layered" type="boolean" />
     <param name="layer" type="int" />
     <param name="access" type="enum">
-      <arg name="READ_ONLY" version="420" deprecated="no" removed="no" limited="no" />
+      <arg name="READ_ONLY" version="420" deprecated="no" removed="no" limited="430" />
       <arg name="WRITE_ONLY" version="420" deprecated="no" removed="no" limited="no" />
       <arg name="READ_WRITE" version="420" deprecated="no" removed="no" limited="no" />
     </param>
@@ -267,8 +293,7 @@
   </command>
 
   <command name="Uniform1i" return="void" man="http://www.opengl.org/sdk/docs/man/xhtml/glUniform.xml">
-    <spec name="gl" profile="core" version="200" deprecated="no" removed="no" limited="420" />
-    <spec name="gl" profile="comp" version="200" deprecated="no" removed="no" limited="420" />
+    <spec name="gl" version="200" deprecated="no" removed="no" limited="420" />
     <spec name="es" version="200" deprecated="no" removed="no" limited="no" />
   </command>
 
@@ -276,5 +301,4 @@
     <command name="BindImageTexture" />
   </extension>
   
-  
-</spec>
+</lang>
