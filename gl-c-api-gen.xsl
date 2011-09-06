@@ -20,8 +20,8 @@
   <xsl:param name="profile-limited" select="'limited'" />
 
   <!-- Processing parameters -->
-  <xsl:param name="Spec" select="$spec-es" />
-  <xsl:param name="Version" select="'200'" />
+  <xsl:param name="Spec" select="$spec-gl" />
+  <xsl:param name="Version" select="'420'" />
   <xsl:param name="Profile" select="$profile-limited" />
 
   <xsl:template match="type">
@@ -75,43 +75,64 @@
     <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
     <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
     <xsl:text>&#10;</xsl:text>
-    <!-- Version -->
+    
+    <!-- Versions -->
     <xsl:value-of select="concat('// Declare supported versions of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:text>&#10;</xsl:text>
-    <!-- Type -->
+    
+    <!-- Types -->
     <xsl:value-of select="concat('// Declare types of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
-    <xsl:apply-templates select="./type/spec[@name=$Spec][$Version>=./@version]" />
+    <xsl:apply-templates select="./type/spec[@name=$Spec][$Version>=./@version]/.." />
     <xsl:text>&#10;</xsl:text>
-    <!-- Token -->
+    
+    <!-- Tokens -->
     <xsl:value-of select="concat('// Define tokens of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:apply-templates select="./token[$Version>=./@version]" />
     <xsl:text>&#10;</xsl:text>
-    <!-- Command -->
+    
+    <!-- Commands -->
     <xsl:value-of select="concat('// Declare commands of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:text>&#10;</xsl:text>
     <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />   
   </xsl:template>
 
   <xsl:template match="/">
+    <xsl:variable name="SelectedSpec" select="./lang/spec[@name=$Spec]" />
+    
     <xsl:choose>
       <!-- Check valid specification -->
-      <xsl:when test="$Spec and ./lang/spec[@name=$Spec]">
+      <xsl:when test="$Spec and $SelectedSpec">
+        <xsl:variable name="SelectedVersion" select="$SelectedSpec/version[@name=$Version]" />
+        
         <xsl:choose>
-          <!-- Check valid version -->
-          <xsl:when test="./lang/spec[@name=$Spec]/version[@name=$Version]">
+          <!-- Check valid version for OpenGL only -->
+          <xsl:when test="$SelectedVersion and $Spec=$spec-gl">
             <xsl:choose>
               <!-- Check valid profile -->
-              <xsl:when test="($Profile=$profile-comp) or ($Profile=$profile-core) or ($Profile=$profile-limited)">
+              <xsl:when test="($SelectedVersion/@compatiblity='yes') and ($Profile=$profile-comp)">
                 <xsl:apply-templates select="./lang" />
               </xsl:when>
+              <xsl:when test="($SelectedVersion/@core='yes') and ($Profile=$profile-core)">
+                <xsl:apply-templates select="./lang" />
+              </xsl:when>
+              <xsl:when test="($SelectedVersion/@limited='yes') and ($Profile=$profile-limited)">
+                <xsl:apply-templates select="./lang" />
+              </xsl:when>
+              <xsl:when test="($Profile=$profile-comp) or ($Profile=$profile-core) or ($Profile=$profile-limited)">
+                <xsl:value-of select="concat('ERROR: Unsupported profile for ', $SelectedSpec/@label, ' ', $SelectedVersion/@major, '.', $SelectedVersion/@minor, ' specification...: ', $Profile, '&#10;')" />
+              </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="concat('ERROR: Unknown profile of ', ./lang/spec[./@name=$Spec]/@label, ' specification...: ', $Profile, '&#10;')" />
+                <xsl:value-of select="concat('ERROR: Unknown profile of ', $SelectedSpec/@label, ' specification...: ', $Profile, '&#10;')" />
                 <!-- TODO: Added list of the supported profile -->
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
+          <!-- Check valid version for OpenGL ES and OpenGL SC -->
+          <xsl:when test="$SelectedVersion">
+            <xsl:apply-templates select="./lang" />
+          </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="concat('ERROR: Unknown version of ', ./lang/spec[./@name=$Spec]/@label, ' specification...: ', $Version, '&#10;')" />
+            <xsl:value-of select="concat('ERROR: Unknown version of ', $SelectedSpec/@label, ' specification...: ', $Version, '&#10;')" />
             <!-- TODO: Added list of the supported version -->
           </xsl:otherwise>
         </xsl:choose>
