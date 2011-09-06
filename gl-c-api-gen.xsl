@@ -28,7 +28,6 @@
     <xsl:param name="Name" select="./@name" />
 
     <xsl:choose>
-      <!-- In limited profile, token -->
       <xsl:when test="$Profile='limited'">
         <xsl:variable name="Used" select="/lang/command/param[@type=$Name]" />
         <xsl:variable name="Validity" select="$Used/../spec[@name=$Spec]" />
@@ -52,7 +51,7 @@
         <xsl:variable name="Used" select="/lang/command/param/arg[@name=$Name]" />
         
         <xsl:if test="$Used and ($Used/@limited='no' or $Used/@limited>$Version)">
-          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@upper-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
         </xsl:if>
       </xsl:when>
       <!-- Core profile -->
@@ -60,12 +59,12 @@
         <xsl:variable name="Used" select="/lang/command/param/arg[@name=$Name]" />
 
         <xsl:if test="$Used and ($Used/@removed='no' or $Used/@removed>$Version)">
-          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@upper-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
         </xsl:if>
       </xsl:when>
       <!-- Compatiblity profile -->
       <xsl:otherwise>
-        <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@upper-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+        <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -81,7 +80,7 @@
     <xsl:text>&#10;</xsl:text>
     <!-- Type -->
     <xsl:value-of select="concat('// Declare types of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
-    <xsl:apply-templates select="./type[$Version>=./@version]" />
+    <xsl:apply-templates select="./type/spec[@name=$Spec][$Version>=./@version]" />
     <xsl:text>&#10;</xsl:text>
     <!-- Token -->
     <xsl:value-of select="concat('// Define tokens of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />

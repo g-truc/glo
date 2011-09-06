@@ -2,16 +2,16 @@
 <?xml-stylesheet type="text/xsl" href="./gl-c-api-gen.xsl"?>
 
 <lang>
-  <spec name="es" label="OpenGL ES" upper-ns="GL" lower-ns="gl" version-ns="GL_OSC">
+  <spec name="es" label="OpenGL ES" type-ns="GL" func-ns="gl" upper-ns="GL_ES" lower-ns="gl_es">
     <version name="100" major="1" minor="0" />
     <version name="110" major="1" minor="1" />
     <version name="200" major="2" minor="0" />
   </spec>
-  <spec name="sc" label="OpenGL SC" upper-ns="GL" lower-ns="gl" version-ns="GL_ES">
+  <spec name="sc" label="OpenGL SC" type-ns="GL" func-ns="gl" upper-ns="GL_OSC" lower-ns="gl_sc">
     <version name="100" major="1" minor="0" />
     <version name="101" major="1" minor="0" revision="1" />
   </spec>
-  <spec name="gl" label="OpenGL" upper-ns="GL" lower-ns="gl" version-ns="GL">
+  <spec name="gl" label="OpenGL" type-ns="GL" func-ns="gl" upper-ns="GL" lower-ns="gl">
     <version name="100" major="1" minor="0" compatiblity="yes" />
     <version name="110" major="1" minor="1" compatiblity="yes" />
     <version name="120" major="1" minor="2" compatiblity="yes" />
@@ -30,29 +30,71 @@
     <version name="420" major="4" minor="2" compatiblity="yes" core="yes" limited="yes" />
   </spec>
 
-  <type name="enum" value="unsigned int" version="100" />
-  <type name="boolean" value="unsigned char" version="100" />
-  <type name="bitfield" value="unsigned int" version="100" />
-  <type name="byte" value="signed char" version="100" />
-  <type name="short" value="short" version="100" />
-  <type name="int" value="int" version="100" />
-  <type name="sizei" value="int" version="100" />
-  <type name="ubyte" value="unsigned char" version="100" />
-  <type name="ushort" value="unsigned short" version="100" />
-  <type name="uint" value="unsigned int" version="100" />
-  <type name="float" value="float" version="100" />
-  <type name="float" value="clampf" version="100" />
-  <type name="double" value="double" version="100" />
-  <type name="double" value="clampd" version="100" />
-  <type name="void" value="void" version="100" />
-  
-  <type name="char" value="char" version="200" />
-  <type name="intptr" value="ptrdiff_t" version="150" />
-  <type name="sizeiptr" value="ptrdiff_t" version="150" />
-  
-  <type name="int64" value="int64_t" version="300" />
-  <type name="uint64" value="uint64_t" version="300" />
-  <type name="sync" value="struct __GLsync *" version="300" />
+  <type name="enum" value="unsigned int">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="boolean" value="unsigned char">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="bitfield" value="unsigned int">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="byte" value="signed char">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="short" value="short">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="int" value="int">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="sizei" value="int">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="ubyte" value="unsigned char">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="ushort" value="unsigned short">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="uint" value="unsigned int">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="float" value="float">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="float" value="clampf">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="double" value="double">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="double" value="clampd">
+    <spec name="gl" version="100" />
+  </type>
+  <type name="void" value="void">
+    <spec name="gl" version="100" />
+  </type>
+
+  <type name="intptr" value="ptrdiff_t">
+    <spec name="gl" version="150" />
+  </type>
+  <type name="sizeiptr" value="ptrdiff_t">
+    <spec name="gl" version="150" />
+  </type>
+  <type name="char" value="char" version="200">
+    <spec name="gl" version="200" />
+  </type>
+
+  <type name="int64" value="int64_t">
+    <spec name="gl" version="300" />
+  </type>
+  <type name="uint64" value="uint64_t">
+    <spec name="gl" version="300" />
+  </type>
+  <type name="sync" value="struct __GLsync *">
+    <spec name="gl" version="300" />
+  </type>
 
   <token name="DEPTH_BUFFER_BIT" value="0x00000100" version="100" />
   <token name="STENCIL_BUFFER_BIT" value="0x00000400" version="100" />
