@@ -24,6 +24,25 @@
   <xsl:param name="Version" select="'420'" />
   <xsl:param name="Profile" select="$profile-limited" />
 
+  <xsl:template match="version">
+    <xsl:value-of select="concat('#define ', ../@type-ns, '_VERSION_', ./@major, '_', ./@minor, ' ', '1', '&#10;')"/>
+  </xsl:template>
+  
+  <xsl:template match="spec">
+    <xsl:param name="Name" select="./@name" />
+    <xsl:choose>
+      <xsl:when test="$Profile=$profile-limited">
+        <xsl:apply-templates select="./version[@name=$Version]" />
+      </xsl:when>
+      <xsl:when test="$Profile=$profile-core">
+        <xsl:apply-templates select="./version[@core='yes'][$Version>=@name]" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="./version[$Version>=@name]" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="type">
     <xsl:param name="Name" select="./@name" />
 
@@ -78,6 +97,7 @@
     
     <!-- Versions -->
     <xsl:value-of select="concat('// Declare supported versions of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
+    <xsl:apply-templates select="./spec[@name=$Spec]" />
     <xsl:text>&#10;</xsl:text>
     
     <!-- Types -->

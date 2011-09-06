@@ -15,7 +15,6 @@
     <version name="100" major="1" minor="0" compatiblity="yes" />
     <version name="110" major="1" minor="1" compatiblity="yes" />
     <version name="120" major="1" minor="2" compatiblity="yes" />
-    <version name="121" major="1" minor="2" revision="1" compatiblity="yes" />
     <version name="130" major="1" minor="3" compatiblity="yes" />
     <version name="140" major="1" minor="4" compatiblity="yes" />
     <version name="150" major="1" minor="5" compatiblity="yes" />
