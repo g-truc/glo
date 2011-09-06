@@ -1,5 +1,5 @@
 ================================================================================
-OpenGL Limited 
+OpenGL Overload
 --------------------------------------------------------------------------------
 www.g-truc.net
 mail@g-truc.net
@@ -28,6 +28,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ================================================================================
-OpenGL Limited 4.2.0.0: 2012-XX-XX
+OpenGL Overload 0.1.0.0: 2012-XX-XX
 --------------------------------------------------------------------------------
 - Initial release

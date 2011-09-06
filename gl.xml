@@ -2,16 +2,16 @@
 <?xml-stylesheet type="text/xsl" href="./gl-c-api-gen.xsl"?>
 
 <lang>
-  <spec name="es" label="OpenGL ES" type-ns="GL" func-ns="gl" upper-ns="GL_ES" lower-ns="gl_es">
+  <spec name="es" label="OpenGL ES" api-ns="gl" spec-ns="gl_es">
     <version name="100" major="1" minor="0" />
     <version name="110" major="1" minor="1" />
     <version name="200" major="2" minor="0" />
   </spec>
-  <spec name="sc" label="OpenGL SC" type-ns="GL" func-ns="gl" upper-ns="GL_OSC" lower-ns="gl_sc">
+  <spec name="sc" label="OpenGL SC" api-ns="gl" spec-ns="gl_sc">
     <version name="100" major="1" minor="0" />
     <version name="101" major="1" minor="0" revision="1" />
   </spec>
-  <spec name="gl" label="OpenGL" type-ns="GL" func-ns="gl" upper-ns="GL" lower-ns="gl">
+  <spec name="gl" label="OpenGL" api-ns="gl" spec-ns="gl">
     <version name="100" major="1" minor="0" compatiblity="yes" />
     <version name="110" major="1" minor="1" compatiblity="yes" />
     <version name="120" major="1" minor="2" compatiblity="yes" />

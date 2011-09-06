@@ -11,6 +11,9 @@
 
   <xsl:strip-space elements="*" />
 
+	<xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
+	<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+	
   <!-- Constants -->
   <xsl:param name="spec-gl" select="'gl'" />
   <xsl:param name="spec-es" select="'es'" />
@@ -20,17 +23,18 @@
   <xsl:param name="profile-limited" select="'limited'" />
 
   <!-- Processing parameters -->
-  <xsl:param name="Spec" select="$spec-gl" />
-  <xsl:param name="Version" select="'420'" />
-  <xsl:param name="Profile" select="$profile-limited" />
+  <xsl:param name="Spec" select="$spec-es" />
+  <xsl:param name="Version" select="'200'" />
+  <xsl:param name="Profile" select="$profile-comp" />
 
   <xsl:template match="version">
-    <xsl:value-of select="concat('#define ', ../@type-ns, '_VERSION_', ./@major, '_', ./@minor, ' ', '1', '&#10;')"/>
+	  <xsl:variable name="Namespace" select="translate(/lang/spec[@name=$Spec]/@spec-ns, $smallcase, $uppercase)" />
+    <xsl:value-of select="concat('#define ', $Namespace, '_VERSION_', ./@major, '_', ./@minor, ' ', '1', '&#10;')"/>
   </xsl:template>
   
   <xsl:template match="spec">
     <xsl:param name="Name" select="./@name" />
-    
+	      
     <xsl:choose>
       <xsl:when test="$Profile=$profile-limited">
         <xsl:apply-templates select="./version[@name=$Version]" />
@@ -46,6 +50,7 @@
 
   <xsl:template match="type">
     <xsl:param name="Name" select="./@name" />
+	  <xsl:variable name="Namespace" select="translate(../spec[@name=$Spec]/@api-ns, $smallcase, $uppercase)" />
 
     <xsl:choose>
       <xsl:when test="$Profile='limited'">
@@ -53,17 +58,18 @@
         <xsl:variable name="Validity" select="$Used/../spec[@name=$Spec]" />
 
         <xsl:if test="$Used and (($Validity/@limited='no') or (not($Validity/@limited)) or ($Validity/@limited > $Version))">
-          <xsl:value-of select="concat('typedef ', ./@value, ' ', /lang/spec[@name=$Spec]/@upper-ns, ./@name, ';', '&#10;')"/>
+          <xsl:value-of select="concat('typedef ', ./@value, ' ', $Namespace, ./@name, ';', '&#10;')"/>
         </xsl:if>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="concat('typedef ', ./@value, ' ', /lang/spec[@name=$Spec]/@upper-ns, ./@name, ';', '&#10;')"/>
+        <xsl:value-of select="concat('typedef ', ./@value, ' ', $Namespace, ./@name, ';', '&#10;')"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
   
   <xsl:template match="token">
     <xsl:param name="Name" select="./@name" />
+	  <xsl:variable name="Namespace" select="translate(../spec[@name=$Spec]/@api-ns, $smallcase, $uppercase)" />
     
     <xsl:choose>
       <!-- Limited profile -->
@@ -71,7 +77,7 @@
         <xsl:variable name="Used" select="/lang/command/param/arg[@name=$Name]" />
         
         <xsl:if test="$Used and ($Used/@limited='no' or $Used/@limited>$Version)">
-          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+          <xsl:value-of select="concat('#define ', $Namespace, '_', ./@name, ' ', ./@value, '&#10;')"/>
         </xsl:if>
       </xsl:when>
       <!-- Core profile -->
@@ -79,21 +85,32 @@
         <xsl:variable name="Used" select="/lang/command/param/arg[@name=$Name]" />
 
         <xsl:if test="$Used and ($Used/@removed='no' or $Used/@removed>$Version)">
-          <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+          <xsl:value-of select="concat('#define ', $Namespace, '_', ./@name, ' ', ./@value, '&#10;')"/>
         </xsl:if>
       </xsl:when>
       <!-- Compatiblity profile -->
       <xsl:otherwise>
-        <xsl:value-of select="concat('#define ', /lang/spec[@name=$Spec]/@type-ns, '_', ./@name, ' ', ./@value, '&#10;')"/>
+        <xsl:value-of select="concat('#define ', $Namespace, '_', ./@name, ' ', ./@value, '&#10;')"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
   <xsl:template match="lang">
-    <xsl:variable name="Guard" select="concat('__', ./spec[@name=$Spec]/@lower-ns, '_', $Version, '_', $Profile, '__')" />
+	  <xsl:variable name="Namespace" select="translate(./spec[@name=$Spec]/@spec-ns, $uppercase, $smallcase)" />
+	  
+	  <xsl:choose>
+		  <xsl:when test="$Spec=$spec-gl and (./spec[@name=$Spec]/version[$Version=./@name])">
+			<xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '_', $Profile, '__')" />
+			  <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
+			  <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
+		  </xsl:when>
+		  <xsl:otherwise>
+			 <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '__')" />
+			  <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
+			  <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
+		  </xsl:otherwise>
+	  </xsl:choose>
 
-    <xsl:value-of select="concat('#ifndef ', $Guard, '&#10;')" />
-    <xsl:value-of select="concat('#define ', $Guard, '&#10;')" />
     <xsl:text>&#10;</xsl:text>
     
     <!-- Versions -->
@@ -118,7 +135,17 @@
     <!-- Commands -->
     <xsl:value-of select="concat('// Declare commands of ', ./spec[./@name=$Spec]/@label, ' specification &#10;')" />
     <xsl:text>&#10;</xsl:text>
-    <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />   
+
+	  <xsl:choose>
+		  <xsl:when test="$Spec=$spec-gl and (./spec[@name=$Spec]/version[$Version=./@name])">
+			  <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '_', $Profile, '__')" />
+			  <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <xsl:variable name="Guard" select="concat('__', $Namespace, '_', $Version, '__')" />
+			  <xsl:value-of select="concat('#endif//', $Guard, '&#10;')" />
+		  </xsl:otherwise>
+	  </xsl:choose>
   </xsl:template>
 
   <xsl:template match="/">
