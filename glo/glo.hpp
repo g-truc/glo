@@ -41,8 +41,4 @@ namespace glo
 
 } //namespace glo
 
-#include "core/core.hpp"
-#include "compatibility/compatibility.hpp"
-#include "detail/init.hpp"
-
 #endif//glo_included
