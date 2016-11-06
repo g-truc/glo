@@ -11,7 +11,9 @@ include_directories(external/glm)
 include_directories(external/gli)
 
 find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/external/vulkan)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES -DVK_USE_PLATFORM_WIN32_KHR")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES -DVK_USE_PLATFORM_WIN32_KHR /EHsc")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
@@ -31,14 +33,7 @@ else()
 	add_definitions(-DBINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}")
 endif()
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
-
-set(EXAMPLES texture triangle)
-
 glCreateSampleGTC(gl-450-draw)
-glCreateSampleGTC(gl-450-texture)
 
 add_subdirectory(gl/source)
 
