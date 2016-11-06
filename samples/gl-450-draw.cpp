@@ -11,31 +11,26 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <vulkan/vulkan.h>
-#include "base.hpp"
+#include "base/base.hpp"
 #include "../gl/gl.h"
 #include "../gl/wgl.h"
 #include "../gl/source/context.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
-// Set to "true" to enable Vulkan's validation layers (see vulkandebug.cpp for details)
 #define ENABLE_VALIDATION false
-// Set to "true" to use staging buffers for uploading vertex and index data to device local memory
-// See "prepareVertices" for details on what's staging and on why to use it
 #define USE_STAGING true
 
-class VulkanExample : public VulkanExampleBase
+class gl_450_draw : public VulkanExampleBase
 {
 public:
-	// Vertex buffer and attributes
 	struct {
-		VkDeviceMemory memory;															// Handle to the device memory for this buffer
-		VkBuffer buffer;																// Handle to the Vulkan buffer object that the memory is bound to
+		VkDeviceMemory memory;
+		VkBuffer buffer;
 		VkPipelineVertexInputStateCreateInfo inputState;
 		VkVertexInputBindingDescription inputBinding;
 		std::vector<VkVertexInputAttributeDescription> inputAttributes;
 	} vertices;
 
-	// Index buffer
 	struct 
 	{
 		VkDeviceMemory memory;
@@ -43,66 +38,31 @@ public:
 		uint32_t count;
 	} indices;
 
-	// Uniform block object
 	struct {
 		VkDeviceMemory memory;
 		VkBuffer buffer;
 		VkDescriptorBufferInfo descriptor;
 	}  uniformDataVS;
 
-	// For simplicity we use the same uniform block layout as in the shader:
-	//
-	//	layout(set = 0, binding = 0) uniform UBO
-	//	{
-	//		mat4 projectionMatrix;
-	//		mat4 modelMatrix;
-	//		mat4 viewMatrix;
-	//	} ubo;
-	//
-	// This way we can just memcopy the ubo data to the ubo
-	// Note: You should use data types that align with the GPU in order to avoid manual padding (vec4, mat4)
 	struct {
 		glm::mat4 projectionMatrix;
 		glm::mat4 modelMatrix;
 		glm::mat4 viewMatrix;
 	} uboVS;
 
-	// The pipeline layout is used by a pipline to access the descriptor sets 
-	// It defines interface (without binding any actual data) between the shader stages used by the pipeline and the shader resources
-	// A pipeline layout can be shared among multiple pipelines as long as their interfaces match
 	VkPipelineLayout pipelineLayout;
-
-	// Pipelines (often called "pipeline state objects") are used to bake all states that affect a pipeline
-	// While in OpenGL every state can be changed at (almost) any time, Vulkan requires to layout the graphics (and compute) pipeline states upfront
-	// So for each combination of non-dynamic pipeline states you need a new pipeline (there are a few exceptions to this not discussed here)
-	// Even though this adds a new dimension of planing ahead, it's a great opportunity for performance optimizations by the driver
 	VkPipeline pipeline;
-
-	// The descriptor set layout describes the shader binding layout (without actually referencing descriptor)
-	// Like the pipeline layout it's pretty much a blueprint and can be used with different descriptor sets as long as their layout matches
 	VkDescriptorSetLayout descriptorSetLayout;
-
-	// The descriptor set stores the resources bound to the binding points in a shader
-	// It connects the binding points of the different shaders with the buffers and images used for those bindings
 	VkDescriptorSet descriptorSet;
-
-
-	// Synchronization primitives
-	// Synchronization is an important concept of Vulkan that OpenGL mostly hid away. Getting this right is crucial to using Vulkan.
-
-	// Semaphores
-	// Used to coordinate operations within the graphics queue and ensure correct command ordering
 	VkSemaphore presentCompleteSemaphore;
 	VkSemaphore renderCompleteSemaphore;
 
-	// Fences
-	// Used to check the completion of queue operations (e.g. command buffer execution)
 	std::vector<VkFence> waitFences;
 
 	HGLRC Context;
 	HDC DeviceContext;
 
-	VulkanExample()
+	gl_450_draw()
 		: VulkanExampleBase(ENABLE_VALIDATION)
 		, Context(nullptr)
 		, DeviceContext(nullptr)
@@ -113,13 +73,11 @@ public:
 		width = 1280;
 		height = 720;
 		zoom = -2.5f;
-		title = "OpenGL Example - Basic indexed triangle";
+		title = "gl-450-draw";
 	}
 
-	~VulkanExample()
+	~gl_450_draw()
 	{
-		// Clean up used Vulkan resources 
-		// Note: Inherited destructor cleans up resources stored in base class
 		vkDestroyPipeline(device, pipeline, nullptr);
 
 		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
@@ -316,9 +274,6 @@ public:
 
 			// Bind triangle index buffer
 			vkCmdBindIndexBuffer(drawCmdBuffers[i], indices.buffer, 0, VK_INDEX_TYPE_UINT32);
-
-			// Draw indexed triangle
-			//vkCmdDrawIndexed(drawCmdBuffers[i], indices.count, 1, 0, 0, 1);
 
 			glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indices.count, GL_UNSIGNED_INT, NULL, 1, 0, 0);
 
@@ -1022,63 +977,27 @@ public:
 	}
 };
 
-VulkanExample *vulkanExample;
+gl_450_draw* Sample = nullptr;
 
-#if defined(_WIN32)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	if (vulkanExample != nullptr)
-	{
-		vulkanExample->handleMessages(hWnd, uMsg, wParam, lParam);
-	}
-	return (DefWindowProc(hWnd, uMsg, wParam, lParam));
-}
-#elif defined(__linux__) && !defined(__ANDROID__)
-static void handleEvent(const xcb_generic_event_t *event)
-{
-	if (vulkanExample != nullptr)
-	{
-		vulkanExample->handleEvent(event);
-	}
-}
-#endif
+	if(::Sample != nullptr)
+		::Sample->handleMessages(hWnd, uMsg, wParam, lParam);
 
-// Main entry point
-#if defined(_WIN32)
-// Windows entry point
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
-#elif defined(__ANDROID__)
-// Android entry point
-void android_main(android_app* state)
-#elif defined(__linux__)
-// Linux entry point
-int main(const int argc, const char *argv[])
-#endif
 {
-#if defined(__ANDROID__)
-	// Removing this may cause the compiler to omit the main entry point 
-	// which would make the application crash at start
-	app_dummy();
-#endif
-	vulkanExample = new VulkanExample();
-#if defined(_WIN32)
-	vulkanExample->setupWindow(hInstance, WndProc);
-#elif defined(__ANDROID__)
-	// Attach vulkan example to global android application state
-	state->userData = vulkanExample;
-	state->onAppCmd = VulkanExample::handleAppCommand;
-	state->onInputEvent = VulkanExample::handleAppInput;
-	vulkanExample->androidApp = state;
-#elif defined(__linux__)
-	vulkanExample->setupWindow();
-#endif
-#if !defined(__ANDROID__)
-	vulkanExample->initSwapchain();
-	vulkanExample->prepare();
-#endif
-	vulkanExample->renderLoop();
-	delete(vulkanExample);
-#if !defined(__ANDROID__)
+	::Sample = new gl_450_draw();
+
+	::Sample->setupWindow(hInstance, WndProc);
+
+	::Sample->initSwapchain();
+	::Sample->prepare();
+
+	::Sample->renderLoop();
+	delete ::Sample;
+
 	return 0;
-#endif
 }

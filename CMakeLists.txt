@@ -9,25 +9,18 @@ project(${NAME})
 include_directories(external)
 include_directories(external/glm)
 include_directories(external/gli)
-include_directories(base)
 
 find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/external/vulkan)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES -DVK_USE_PLATFORM_WIN32_KHR")
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-function(buildExample EXAMPLE_NAME)
-	file(GLOB SOURCE *.cpp base/*.cpp *.hpp base/*.hpp ${EXAMPLE_NAME}/*.cpp)
+function(glCreateSampleGTC EXAMPLE_NAME)
+	file(GLOB SOURCE samples/base/*.cpp samples/base/*.hpp)
 	add_executable(${EXAMPLE_NAME} WIN32 samples/${EXAMPLE_NAME}.cpp ${SOURCE})
 	target_link_libraries(${EXAMPLE_NAME} glo ${VULKAN_LIB} ${WINLIBS})
 	add_dependencies(${EXAMPLE_NAME} glo)
-endfunction(buildExample)
-
-function(buildExamples)
-	foreach(EXAMPLE ${EXAMPLES})
-		buildExample(${EXAMPLE})
-	endforeach(EXAMPLE)
-endfunction(buildExamples)
+endfunction(glCreateSampleGTC)
 
 option(IN_SOURCE_BUILD "IN_SOURCE_BUILD" OFF)
 if(OGL_SAMPLES_IN_SOURCE_BUILD)
@@ -44,7 +37,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 
 set(EXAMPLES texture triangle)
 
-buildExamples()
+glCreateSampleGTC(gl-450-draw)
+glCreateSampleGTC(gl-450-texture)
 
 add_subdirectory(gl/source)
 
