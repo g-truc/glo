@@ -1,0 +1,16 @@
+#pragma once
+
+struct pipeline_desc
+{
+	VkGraphicsPipelineCreateInfo GraphicsPipeline;
+	VkPipelineShaderStageCreateInfo ShaderStage;
+	VkPipelineVertexInputStateCreateInfo VertexInputState;
+	VkPipelineInputAssemblyStateCreateInfo InputAssemblyState;
+	VkPipelineTessellationStateCreateInfo TessellationState;
+	VkPipelineViewportStateCreateInfo ViewportState;
+	VkPipelineRasterizationStateCreateInfo RasterizationState;
+	VkPipelineMultisampleStateCreateInfo MultisampleState;
+	VkPipelineDepthStencilStateCreateInfo DepthStencilState;
+	VkPipelineColorBlendStateCreateInfo ColorBlendState;
+	VkPipelineDynamicStateCreateInfo DynamicState;
+};
