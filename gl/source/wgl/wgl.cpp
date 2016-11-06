@@ -1,5 +1,6 @@
-#include "../wgl.h"
-#include "context.hpp"
+#include "../../wgl.h"
+#include "../gl/context.hpp"
+#include "../gl5/context.hpp"
 
 namespace
 {

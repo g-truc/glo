@@ -14,7 +14,7 @@
 #include "base/base.hpp"
 #include "../gl/gl.h"
 #include "../gl/wgl.h"
-#include "../gl/source/context.hpp"
+#include "../gl/source/core/context.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false
