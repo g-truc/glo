@@ -20,15 +20,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX -D_USE_MATH_DEFINES")
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 
-# Function for building single example
 function(buildExample EXAMPLE_NAME)
 	file(GLOB SOURCE *.cpp base/*.cpp *.hpp base/*.hpp ${EXAMPLE_NAME}/*.cpp)
-	add_executable(${EXAMPLE_NAME} WIN32 ${EXAMPLE_NAME}/${EXAMPLE_NAME}.cpp ${SOURCE})
+	add_executable(${EXAMPLE_NAME} WIN32 samples/${EXAMPLE_NAME}.cpp ${SOURCE})
 	target_link_libraries(${EXAMPLE_NAME} glo ${VULKAN_LIB} ${WINLIBS})
 	add_dependencies(${EXAMPLE_NAME} glo)
 endfunction(buildExample)
 
-# Build all examples
 function(buildExamples)
 	foreach(EXAMPLE ${EXAMPLES})
 		buildExample(${EXAMPLE})
