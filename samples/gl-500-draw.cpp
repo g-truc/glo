@@ -12,7 +12,7 @@
 
 #include <vulkan/vulkan.h>
 #include "base/base.hpp"
-#include "../gl/gl.h"
+#include "../gl/gl5.h"
 #include "../gl/wgl.h"
 #include "../gl/source/context.hpp"
 
@@ -20,11 +20,9 @@
 #define ENABLE_VALIDATION false
 #define USE_STAGING true
 
-class gl_450_draw : public VulkanExampleBase
+class gl_500_draw : public VulkanExampleBase
 {
 public:
-	GLuint ElementBuffer;
-
 	struct {
 		VkDeviceMemory memory;
 		VkBuffer buffer;
@@ -64,7 +62,7 @@ public:
 	HGLRC Context;
 	HDC DeviceContext;
 
-	gl_450_draw()
+	gl_500_draw()
 		: VulkanExampleBase(ENABLE_VALIDATION)
 		, Context(nullptr)
 		, DeviceContext(nullptr)
@@ -75,10 +73,10 @@ public:
 		width = 1280;
 		height = 720;
 		zoom = -2.5f;
-		title = "gl-450-draw";
+		title = "gl-500-draw";
 	}
 
-	~gl_450_draw()
+	~gl_500_draw()
 	{
 		vkDestroyPipeline(device, pipeline, nullptr);
 
@@ -241,9 +239,7 @@ public:
 
 			vkCmdBindIndexBuffer(drawCmdBuffers[i], indices.buffer, 0, VK_INDEX_TYPE_UINT32);
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBuffer);
-
-			glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indices.count, GL_UNSIGNED_INT, NULL, 1, 0, 0);
+			gl5DrawIndexed(indices.count, 1, 0, 0, 0);
 
 			vkCmdEndRenderPass(drawCmdBuffers[i]);
 
@@ -782,7 +778,7 @@ public:
 	}
 };
 
-gl_450_draw* Sample = nullptr;
+gl_500_draw* Sample = nullptr;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -794,7 +790,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
 {
-	::Sample = new gl_450_draw();
+	::Sample = new gl_500_draw();
 
 	::Sample->setupWindow(hInstance, WndProc);
 

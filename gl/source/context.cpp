@@ -59,6 +59,23 @@ namespace gl
 		this->CurrentPipelineDesc.GraphicsPipeline.pViewportState = &this->CurrentPipelineDesc.ViewportState;
 	}
 
+	void context::draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
+	{
+		if(this->Invalidated & PIPELINE_INVALIDATED)
+			this->validatePipeline();
+
+		vkCmdDraw(this->CurrentCommandBuffer, Count, InstanceCount, FirstVertex, BaseInstance);
+	}
+
+	void context::drawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
+	{
+		if(this->Invalidated & PIPELINE_INVALIDATED)
+			this->validatePipeline();
+
+		vkCmdDrawIndexed(this->CurrentCommandBuffer, Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
+	}
+
+/*
 	void context::drawElements(GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
 	{
 		this->CurrentPipelineDesc.InputAssemblyState.topology = ::translatePrimitive(Mode);
@@ -85,7 +102,7 @@ namespace gl
 
 		this->Invalidated |= DESCRIPTOR_INVALIDATED;
 	}
-
+*/
 	void context::validatePipeline()
 	{
 		

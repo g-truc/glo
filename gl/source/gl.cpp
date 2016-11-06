@@ -2,13 +2,18 @@
 #include "context.hpp"
 
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance (
-	GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance)
+	GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
 {
-	gl::GetCurrentContext()->drawArrays(mode, first, count, instancecount, baseinstance);
+	gl::GetCurrentContext()->draw(Count, InstanceCount, First, BaseInstance);
 }
 
 GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(
-	GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance)
+	GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
 {
-	gl::GetCurrentContext()->drawElements(mode, count, type, indices, instancecount, basevertex, baseinstance);
+	gl::GetCurrentContext()->drawIndexed(Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
+}
+
+GLAPI void APIENTRY glBindBuffer(GLenum Target, GLuint Buffer)
+{
+	
 }

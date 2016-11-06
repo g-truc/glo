@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../external/vulkan/vulkan.h"
-#include "../gl/gl.h"
 #include "pipeline_layout.hpp"
 #include <vector>
 
@@ -9,8 +8,8 @@ namespace gl
 {
 	struct range
 	{
-		GLintptr Offset;
-		GLsizeiptr Size;
+		std::size_t Offset;
+		std::size_t Size;
 	};
 
 	class context
@@ -24,10 +23,8 @@ namespace gl
 	public:
 		context();
 
-		void drawElements(GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance);
-		void drawArrays(GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance);
-
-		void bindBuffers(GLenum Target, GLint FirstBinding, GLsizei BindingCount, range const* Range);
+		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
+		void drawIndexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
 
 		void tempSetCommandBuffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
 

@@ -23,6 +23,7 @@ enum GLbufferTarget
 
 };
 
+/*
 GLdevice glCreateDevice();
 void glReleaseDevice(GLdevice Device);
 void glFlush(GLdevice Device);
@@ -44,6 +45,10 @@ void glEndPass(GLdevice Device, GLpass Pass);
 GLpipeline glCreatePipeline();
 void glReleasePipeline(GLpipeline Pipeline);
 void glBindPipeline(GLdevice Device, GLpipeline Pipeline);
+*/
+
+void gl5Draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance);
+void gl5DrawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance);
 
 #ifdef __cplusplus
 }

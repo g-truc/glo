@@ -34,6 +34,7 @@ else()
 endif()
 
 glCreateSampleGTC(gl-450-draw)
+glCreateSampleGTC(gl-500-draw)
 
 add_subdirectory(gl/source)
 
