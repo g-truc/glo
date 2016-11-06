@@ -31,43 +31,29 @@ namespace glo
 
 	void context::drawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
 	{
+		if(GLO_ENABLE_FRONTEND_GLL && (this->Invalidated & BIND_INDEX_BUFFER_INVALIDATED))
+		{
+			bindIndexBufferDesc const& Desc = this->CurrentBinding.BindIndexBuffer;
+			this->bindIndexBuffer(Desc.Buffer, Desc.Offset, Desc.IndexType);
+		}
+
 		if(this->Invalidated & PIPELINE_INVALIDATED)
+		{
 			this->validatePipeline();
+		}
 
 		vkCmdDrawIndexed(this->CurrentCommandBuffer, Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 	}
 
-/*
-	void context::drawElements(GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
+	void context::bindIndexBuffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType)
 	{
-		this->CurrentPipelineDesc.InputAssemblyState.topology = ::translatePrimitive(Mode);
-
-		if(this->Invalidated & PIPELINE_INVALIDATED)
-			this->validatePipeline();
-
-		vkCmdDrawIndexed(this->CurrentCommandBuffer, Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
+		vkCmdBindIndexBuffer(this->CurrentCommandBuffer, Buffer, Offset, IndexType);
+		this->Invalidated &= ~BIND_INDEX_BUFFER_INVALIDATED;
 	}
 
-	void context::drawArrays(GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
-	{
-		this->CurrentPipelineDesc.InputAssemblyState.topology = ::translatePrimitive(Mode);
-
-		if(this->Invalidated & PIPELINE_INVALIDATED)
-			this->validatePipeline();
-
-		vkCmdDraw(this->CurrentCommandBuffer, Count, InstanceCount, First, BaseInstance);
-	}
-
-	void context::bindBuffers(GLenum Target, GLint FirstBinding, GLsizei BindingCount, range const* Range)
-	{
-		
-
-		this->Invalidated |= DESCRIPTOR_INVALIDATED;
-	}
-*/
 	void context::validatePipeline()
 	{
-		
+
 
 		this->Invalidated &= ~PIPELINE_INVALIDATED;
 	}

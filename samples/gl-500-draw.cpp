@@ -241,7 +241,7 @@ public:
 			VkDeviceSize offsets[1] = { 0 };
 			vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
 
-			vkCmdBindIndexBuffer(drawCmdBuffers[i], indices.buffer, 0, VK_INDEX_TYPE_UINT32);
+			gl5BindBuffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
 			gl5DrawIndexed(indices.count, 1, 0, 0, 0);
 

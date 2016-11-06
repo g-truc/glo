@@ -243,9 +243,7 @@ public:
 			VkDeviceSize offsets[1] = { 0 };
 			vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
 
-			vkCmdBindIndexBuffer(drawCmdBuffers[i], indices.buffer, 0, VK_INDEX_TYPE_UINT32);
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ElementBuffer);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indices.buffer);
 
 			glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indices.count, GL_UNSIGNED_INT, NULL, 1, 0, 0);
 

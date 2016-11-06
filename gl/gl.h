@@ -12,6 +12,8 @@ extern "C" {
 #	include <windows.h>
 #endif
 
+#include "../external/vulkan/vulkan.h"
+
 #ifndef APIENTRY
 #define APIENTRY
 #endif
@@ -68,7 +70,8 @@ typedef ptrdiff_t GLintptr;
 
 #define GL_ELEMENT_ARRAY_BUFFER           0x8893
 
-GLAPI void APIENTRY glBindBuffer(GLenum target, GLuint buffer);
+//GLAPI void APIENTRY glBindBuffer(GLenum target, GLuint buffer);
+GLAPI void APIENTRY glBindBuffer(GLenum target, VkBuffer Buffer);
 
 #endif /* GL_VERSION_1_5 */
 

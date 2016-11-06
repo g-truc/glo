@@ -5,7 +5,12 @@
 
 namespace
 {
-	VkPrimitiveTopology translatePrimitive(GLenum Mode)
+	gll::context* getContext()
+	{
+		return static_cast<gll::context*>(glo::GetCurrentContext());
+	}
+
+	VkPrimitiveTopology translatePrimitiveTopology(GLenum Mode)
 	{
 		switch(Mode)
 		{
@@ -36,21 +41,38 @@ namespace
 			return VK_PRIMITIVE_TOPOLOGY_MAX_ENUM;
 		}
 	}
+
+	VkIndexType translateIndexType(GLenum Type)
+	{
+		switch(Type)
+		{
+		case GL_UNSIGNED_SHORT:
+			return VK_INDEX_TYPE_UINT16;
+		case GL_UNSIGNED_INT:
+			return VK_INDEX_TYPE_UINT32;
+		default:
+			assert(0);
+			return VK_INDEX_TYPE_MAX_ENUM;
+		}
+	}
 }//namespace
 
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance (
 	GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
 {
-	glo::GetCurrentContext()->draw(Count, InstanceCount, First, BaseInstance);
+	getContext()->setPrimitiveTopology(::translatePrimitiveTopology(Mode));
+	getContext()->draw(Count, InstanceCount, First, BaseInstance);
 }
 
 GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(
 	GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
 {
-	glo::GetCurrentContext()->drawIndexed(Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
+	getContext()->setPrimitiveTopology(::translatePrimitiveTopology(Mode));
+	getContext()->setIndexBufferType(::translateIndexType(Type));
+	getContext()->drawIndexed(Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
 }
 
-GLAPI void APIENTRY glBindBuffer(GLenum Target, GLuint Buffer)
+GLAPI void APIENTRY glBindBuffer(GLenum Target, VkBuffer Buffer)//GLuint Buffer)
 {
-	
+	getContext()->bindBuffer(Target, Buffer);
 }
