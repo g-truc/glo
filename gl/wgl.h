@@ -12,7 +12,7 @@ extern "C" {
 
 #define WGL_WGLEXT_VERSION 20161024
 
-HGLRC WINAPI wglCreateContextGTC(HDC hdc);
+HGLRC WINAPI wglCreateContextAttribsGTC(HDC hdc, HGLRC hShareContext, const int *attribList);
 BOOL  WINAPI wglDeleteContextGTC(HGLRC hglrc);
 BOOL  WINAPI wglMakeCurrentGTC(HDC hdc, HGLRC hglrc);
 HGLRC WINAPI wglGetCurrentContextGTC(VOID);
@@ -161,6 +161,11 @@ BOOL WINAPI wglChoosePixelFormatARB (HDC hdc, const int *piAttribIList, const FL
 #define WGL_EXT_create_context_es_profile 1
 #define WGL_CONTEXT_ES_PROFILE_BIT_EXT    0x00000004
 #endif /* WGL_EXT_create_context_es_profile */
+
+#ifndef WGL_GTC_create_context_gl5_profile
+#define WGL_GTC_create_context_gl5_profile 1
+#define WGL_CONTEXT_GL5_PROFILE_BIT_GTC    0x00000008
+#endif /* WGL_GTC_create_context_gl5_profile */
 
 #ifndef WGL_EXT_depth_float
 #define WGL_EXT_depth_float 1

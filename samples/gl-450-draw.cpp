@@ -14,7 +14,7 @@
 #include "base/base.hpp"
 #include "../gl/gl.h"
 #include "../gl/wgl.h"
-#include "../gl/source/core/context.hpp"
+#include "../gl/source/glo/context.hpp"
 
 #define VERTEX_BUFFER_BIND_ID 0
 #define ENABLE_VALIDATION false
@@ -69,7 +69,11 @@ public:
 		, Context(nullptr)
 		, DeviceContext(nullptr)
 	{
-		this->Context = wglCreateContextGTC(this->DeviceContext);
+		int const attribList[] = {
+			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+			0, 0};
+
+		this->Context = wglCreateContextAttribsGTC(this->DeviceContext, nullptr, attribList);
 		wglMakeCurrentGTC(this->DeviceContext, this->Context);
 
 		width = 1280;
@@ -212,7 +216,7 @@ public:
 		{
 			renderPassBeginInfo.framebuffer = frameBuffers[i];
 
-			gl::context* Context = (gl::context*)wglGetCurrentContextGTC();
+			glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
 			Context->tempSetCommandBuffer(drawCmdBuffers[i]);
 
 			VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));

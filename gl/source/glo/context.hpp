@@ -4,7 +4,7 @@
 #include "pipeline_layout.hpp"
 #include <vector>
 
-namespace gl
+namespace glo
 {
 	struct range
 	{
@@ -22,6 +22,7 @@ namespace gl
 
 	public:
 		context();
+		virtual ~context(){}
 
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
 		void drawIndexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
@@ -37,7 +38,7 @@ namespace gl
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};
 
-	gl::context* GetCurrentContext();
-}//namespace gl
+	context* GetCurrentContext();
+}//namespace glo
 
 #include "context.inl"

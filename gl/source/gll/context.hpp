@@ -2,10 +2,10 @@
 
 #include "../glo/context.hpp"
 
-namespace gl5
+namespace gll
 {
 	class context : public glo::context
 	{
 
 	};
-}//namespace gl5
+}//namespace gll

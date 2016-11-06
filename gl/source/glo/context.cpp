@@ -1,7 +1,7 @@
 #include "context.hpp"
 #include <cassert>
 
-namespace gl
+namespace glo
 {
 	context::context()
 		: CurrentCommandBuffer(nullptr)
@@ -71,5 +71,5 @@ namespace gl
 
 		this->Invalidated &= ~PIPELINE_INVALIDATED;
 	}
-}//namespace gl
+}//namespace glo
 
