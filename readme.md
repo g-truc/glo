@@ -1,11 +1,8 @@
-# vk-samples
+OpenGL Overload (*GLO*) aims at being a cross-platform implementation of OpenGL and building a streamline and modern APIs friendly OpenGL like API.
 
-## [Lastest release](https://github.com/g-truc/vk-samples/releases/latest)
+Let's see where it goes!
 
-## Release notes
+Thanks for contributing to the project by [submitting issues](https://github.com/g-truc/glo/issues) for bug reports and feature requests.
 
-#### [vk-samples 0.1](https://github.com/g-truc/vk-samples/releases/latest) - 2017-XX-XX
-##### Features:
-- Added GTC_color_encoding extension
 
 
