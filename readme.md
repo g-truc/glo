@@ -6,6 +6,9 @@ Ideally this project will provide two front-ends: OpenGL and a modernized versio
 
 The amount of work needed is phenomenal, so let's see where it goes!
 
+For more information about *GLO*, please have a look at the [manual](manual.md).
+The source code and the documentation are licensed under both the [Happy Bunny License (Modified MIT) or the MIT License](manual.md#section0).
+
 Thanks for contributing to the project by [submitting issues](https://github.com/g-truc/glo/issues) for bug reports and feature requests.
 
 
