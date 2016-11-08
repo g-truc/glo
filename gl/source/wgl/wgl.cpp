@@ -60,7 +60,7 @@ HGLRC WINAPI wglGetCurrentContextGTC(VOID)
 
 namespace glo
 {
-	context* GetCurrentContext()
+	context* get_current_context()
 	{
 		return ::CurrentContext;
 	}

@@ -24,34 +24,34 @@ namespace glo
 	void context::draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
 	{
 		if(this->Invalidated & PIPELINE_INVALIDATED)
-			this->validatePipeline();
+			this->validate_pipeline();
 
 		vkCmdDraw(this->CurrentCommandBuffer, Count, InstanceCount, FirstVertex, BaseInstance);
 	}
 
-	void context::drawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
+	void context::draw_indexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
 	{
 		if(GLO_ENABLE_FRONTEND_GLL && (this->Invalidated & BIND_INDEX_BUFFER_INVALIDATED))
 		{
 			bindIndexBufferDesc const& Desc = this->CurrentBinding.BindIndexBuffer;
-			this->bindIndexBuffer(Desc.Buffer, Desc.Offset, Desc.IndexType);
+			this->bind_index_buffer(Desc.Buffer, Desc.Offset, Desc.IndexType);
 		}
 
 		if(this->Invalidated & PIPELINE_INVALIDATED)
 		{
-			this->validatePipeline();
+			this->validate_pipeline();
 		}
 
 		vkCmdDrawIndexed(this->CurrentCommandBuffer, Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 	}
 
-	void context::bindIndexBuffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType)
+	void context::bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType)
 	{
 		vkCmdBindIndexBuffer(this->CurrentCommandBuffer, Buffer, Offset, IndexType);
 		this->Invalidated &= ~BIND_INDEX_BUFFER_INVALIDATED;
 	}
 
-	void context::validatePipeline()
+	void context::validate_pipeline()
 	{
 
 

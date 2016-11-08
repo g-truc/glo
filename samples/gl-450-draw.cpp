@@ -20,7 +20,7 @@
 #define ENABLE_VALIDATION false
 #define USE_STAGING true
 
-class gl_450_draw : public VulkanExampleBase
+class gl_450_draw : public gl_base
 {
 public:
 	GLuint ElementBuffer;
@@ -65,7 +65,7 @@ public:
 	HDC DeviceContext;
 
 	gl_450_draw()
-		: VulkanExampleBase(ENABLE_VALIDATION)
+		: gl_base(ENABLE_VALIDATION)
 		, Context(nullptr)
 		, DeviceContext(nullptr)
 	{
@@ -217,7 +217,7 @@ public:
 			renderPassBeginInfo.framebuffer = frameBuffers[i];
 
 			glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
-			Context->tempSetCommandBuffer(drawCmdBuffers[i]);
+			Context->temp_set_command_buffer(drawCmdBuffers[i]);
 
 			VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
 
@@ -759,7 +759,7 @@ public:
 
 	void prepare()
 	{
-		VulkanExampleBase::prepare();
+		gl_base::prepare();
 		prepareSynchronizationPrimitives();
 		prepareVertices(USE_STAGING);
 		prepareUniformBuffers();

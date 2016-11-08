@@ -15,7 +15,7 @@ namespace glo
 		std::size_t Size;
 	};
 
-	enum bufferTarget
+	enum buffer_target
 	{
 		BUFFER_TARGET_INDEX
 	};
@@ -27,10 +27,10 @@ namespace glo
 		virtual ~context(){}
 
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
-		void drawIndexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
-		void bindIndexBuffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
+		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
+		void bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
 
-		void tempSetCommandBuffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
+		void temp_set_command_buffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
 
 	protected:
 		enum
@@ -52,7 +52,7 @@ namespace glo
 			bindIndexBufferDesc BindIndexBuffer;
 		};
 
-		void validatePipeline();
+		void validate_pipeline();
 
 		VkCommandBuffer CurrentCommandBuffer;
 		pipeline_desc CurrentPipelineDesc;
@@ -61,7 +61,7 @@ namespace glo
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};
 
-	context* GetCurrentContext();
+	context* get_current_context();
 }//namespace glo
 
 #include "context.inl"

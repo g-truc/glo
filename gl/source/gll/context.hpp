@@ -9,19 +9,19 @@ namespace gll
 	class context : public glo::context
 	{
 	public:
-		void setPrimitiveTopology(VkPrimitiveTopology Primitive)
+		void set_primitive_topology(VkPrimitiveTopology Primitive)
 		{
 			this->CurrentPipelineDesc.InputAssemblyState.topology = Primitive;
 			this->Invalidated |= PIPELINE_INVALIDATED;
 		}
 
-		void setIndexBufferType(VkIndexType IndexType)
+		void set_index_buffer_type(VkIndexType IndexType)
 		{
 			this->CurrentBinding.BindIndexBuffer.IndexType = IndexType;
 			this->Invalidated |= BIND_INDEX_BUFFER_INVALIDATED;
 		}
 
-		void bindBuffer(GLenum Target, VkBuffer Buffer)
+		void bind_buffer(GLenum Target, VkBuffer Buffer)
 		{
 			switch(Target)
 			{
