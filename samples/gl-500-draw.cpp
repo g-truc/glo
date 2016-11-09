@@ -221,12 +221,8 @@ public:
 
 			vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			VkViewport viewport = {};
-			viewport.height = (float)height;
-			viewport.width = (float)width;
-			viewport.minDepth = (float) 0.0f;
-			viewport.maxDepth = (float) 1.0f;
-			vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
+			gl5_viewport const Viewport = gl5_make_viewport(0, 0, width, height, 0.0f, 1.0f);
+			gl5_viewports(0, 1, &Viewport);
 
 			gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
 			gl5_scissors(0, 1, &Rect);

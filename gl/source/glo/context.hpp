@@ -16,17 +16,10 @@ namespace glo
 		std::size_t Size;
 	};
 
-	struct rect
-	{
-		std::int32_t x;
-		std::int32_t y;
-		std::uint32_t width;
-		std::uint32_t height;
-	};
-
 	enum
 	{
-		MAX_SCISSORS = 8
+		MAX_SCISSORS = 8,
+		MAX_VIEWPORTS = 8
 	};
 
 	enum buffer_target
@@ -43,36 +36,26 @@ namespace glo
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
 		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
 		void bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
-		void set_dynamic_scissor(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rect);
+		void set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects);
+		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);
 
 		void temp_set_command_buffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
 
 	protected:
 		enum
 		{
-			PIPELINE_INVALIDATED = 1 << 0,
-			DESCRIPTOR_INVALIDATED = 1 << 1,
-			BIND_INDEX_BUFFER_INVALIDATED = 1 << 2
+			INVALIDATED_PIPELINE_BIT = 1 << 0,
+			INVALIDATED_BIND_INDEX_BUFFER_BIT = 1 << 1,
+			INVALIDATED_VIEWPORTS_BIT = 1 << 2
 		};
+		std::uint32_t Invalidated;
 
-		struct bindIndexBufferDesc
-		{
-			VkBuffer Buffer;
-			VkDeviceSize Offset;
-			VkIndexType IndexType;
-		};
+		pipeline_desc CurrentPipelineDesc;
 
-		struct binding_desc
-		{
-			bindIndexBufferDesc BindIndexBuffer;
-		};
-
+	private:
 		void validate_pipeline();
 
 		VkCommandBuffer CurrentCommandBuffer;
-		pipeline_desc CurrentPipelineDesc;
-		binding_desc CurrentBinding;
-		std::uint32_t Invalidated;
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};
 

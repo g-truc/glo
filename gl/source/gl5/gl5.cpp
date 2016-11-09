@@ -48,5 +48,13 @@ void gl5_scissors(uint32_t First, uint32_t Count, gl5_rect const* Scissors)
 	assert(First + Count < glo::MAX_SCISSORS);
 	assert(Scissors);
 
-	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(Scissors));
+	get_context()->set_dynamic_scissors(First, Count, reinterpret_cast<VkRect2D const*>(Scissors));
+}
+
+void gl5_viewports(uint32_t First, uint32_t Count, gl5_viewport const* Viewports)
+{
+	assert(First + Count < glo::MAX_VIEWPORTS);
+	assert(Viewports);
+
+	get_context()->set_dynamic_viewports(First, Count, reinterpret_cast<VkViewport const*>(Viewports));
 }

@@ -92,6 +92,14 @@ GLAPI void APIENTRY glBindBuffer(GLenum target, VkBuffer Buffer);
 GLAPI void APIENTRY glScissorArrayv(GLuint first, GLsizei count, const GLint *v);
 GLAPI void APIENTRY glScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height);
 
+#ifndef GL_VERSION_4_1
+#	define GL_VERSION_4_1 1
+#endif
+
+GLAPI void APIENTRY glViewportIndexedf(GLuint index, GLfloat x, GLfloat y, GLfloat w, GLfloat h);
+GLAPI void APIENTRY glViewportIndexedfv(GLuint index, const GLfloat *v);
+GLAPI void APIENTRY glDepthRangeIndexed(GLuint index, GLdouble n, GLdouble f);
+
 #ifndef GL_VERSION_4_2
 #	define GL_VERSION_4_2 1
 #endif

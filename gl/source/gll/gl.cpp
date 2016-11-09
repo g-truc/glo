@@ -72,13 +72,28 @@ GLAPI void APIENTRY glScissorArrayv(GLuint First, GLsizei Count, GLint const* Sc
 	assert(First + Count < glo::MAX_SCISSORS);
 	assert(ScissorArray);
 
-	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(ScissorArray));
+	get_context()->set_dynamic_scissors(First, Count, reinterpret_cast<VkRect2D const*>(ScissorArray));
 }
 
 GLAPI void APIENTRY glScissorIndexed(GLuint Index, GLint Left, GLint Bottom, GLsizei Width, GLsizei Height)
 {
 	GLint const Scissor[] = {Left, Bottom, Width, Height};
 	glScissorArrayv(Index, 1, Scissor);
+}
+
+GLAPI void APIENTRY glViewportIndexedf(GLuint Index, GLfloat x, GLfloat y, GLfloat w, GLfloat h)
+{
+	get_context()->set_dynamic_viewport(Index, x, y, w, h);
+}
+
+GLAPI void APIENTRY glViewportIndexedfv(GLuint Index, const GLfloat *v)
+{
+	get_context()->set_dynamic_viewport(Index, v[0], v[1], v[2], v[3]);
+}
+
+GLAPI void APIENTRY glDepthRangeIndexed(GLuint Index, GLdouble Near, GLdouble Far)
+{
+	get_context()->set_dynamic_depth_range(Index, static_cast<float>(Near), static_cast<float>(Far));
 }
 
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance (
