@@ -9,7 +9,7 @@ namespace
 		return static_cast<gl5::context*>(glo::get_current_context());
 	}
 
-	VkIndexType translate_index_type(gl5BufferType Type)
+	VkIndexType translate_index_type(gl5_buffer_type Type)
 	{
 		VkIndexType const Table[] =
 		{
@@ -21,25 +21,17 @@ namespace
 	}
 }//namespace
 
-void gl5Draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
+void gl5_draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
 {
 	get_context()->draw(Count, InstanceCount, FirstVertex, BaseInstance);
 }
 
-void gl5DrawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
+void gl5_draw_indexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance)
 {
 	get_context()->draw_indexed(Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 }
 
-void APIENTRY gl5Scissor(uint32_t First, uint32_t Count, GL5rect const* Scissors)
-{
-	assert(First + Count < glo::MAX_SCISSORS);
-	assert(Scissors);
-
-	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(Scissors));
-}
-
-void gl5BindBuffer(gl5BufferTarget Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5BufferType Type)
+void gl5_bind_buffer(gl5_buffer_target Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5_buffer_type Type)
 {
 	switch(Target)
 	{
@@ -51,3 +43,10 @@ void gl5BindBuffer(gl5BufferTarget Target, VkBuffer Buffer, uint32_t Offset, uin
 	}
 }
 
+void APIENTRY gl5_scissor(uint32_t First, uint32_t Count, gl5_rect const* Scissors)
+{
+	assert(First + Count < glo::MAX_SCISSORS);
+	assert(Scissors);
+
+	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(Scissors));
+}

@@ -312,7 +312,7 @@ void gl_base::renderLoop()
 			std::string windowTitle = getWindowTitle();
 			SetWindowText(window, windowTitle.c_str());
 
-			lastFPS = roundf(1.0f / frameTimer);
+			lastFPS = glm::iround(1.0f / frameTimer);
 			fpsTimer = 0.0f;
 			frameCounter = 0;
 		}

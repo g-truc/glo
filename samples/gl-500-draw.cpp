@@ -228,8 +228,8 @@ public:
 			viewport.maxDepth = (float) 1.0f;
 			vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 
-			GL5rect const Rect = gl5_make_rect(0, 0, width, height);
-			gl5Scissor(0, 1, &Rect);
+			gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
+			gl5_scissor(0, 1, &Rect);
 
 			vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 			vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
@@ -237,9 +237,9 @@ public:
 			VkDeviceSize offsets[1] = { 0 };
 			vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
 
-			gl5BindBuffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
+			gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
-			gl5DrawIndexed(indices.count, 1, 0, 0, 0);
+			gl5_draw_indexed(indices.count, 1, 0, 0, 0);
 
 			vkCmdEndRenderPass(drawCmdBuffers[i]);
 
