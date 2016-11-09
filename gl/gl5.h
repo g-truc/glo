@@ -8,29 +8,52 @@ extern "C" {
 #include <cstdint>
 #include "../external/vulkan/vulkan.h"
 
-typedef struct gl5_offset {
-	int32_t    x;
-	int32_t    y;
-} gl5_offset;
+typedef struct gl5_vec2 {
+	float	x;
+	float	y;
+} gl5_vec2;
 
-typedef struct gl5_extent {
-	uint32_t	Width;
-	uint32_t	Height;
-} gl5_extent;
+typedef struct gl5_ivec2 {
+	int32_t		x;
+	int32_t		y;
+} gl5_ivec2;
+
+typedef struct gl5_uvec2 {
+	uint32_t	x;
+	uint32_t	y;
+} gl5_uvec2;
 
 typedef struct gl5_rect {
-	gl5_offset	Offset;
-	gl5_extent	Extent;
+	gl5_ivec2	Offset;
+	gl5_uvec2	Extent;
 } gl5_rect;
 
 inline gl5_rect gl5_make_rect(int32_t x, int32_t y, uint32_t Width, uint32_t Height)
 {
-	gl5_rect Results;
-	Results.Offset.x = x;
-	Results.Offset.y = y;
-	Results.Extent.Width = Width;
-	Results.Extent.Height = Height;
-	return Results;
+	gl5_rect Rect;
+	Rect.Offset.x = x;
+	Rect.Offset.y = y;
+	Rect.Extent.x = Width;
+	Rect.Extent.y = Height;
+	return Rect;
+}
+
+typedef struct gl5_viewport {
+	gl5_vec2 Offset;
+	gl5_vec2 Extent;
+	gl5_vec2 Depth;
+} gl5_viewport;
+
+inline gl5_viewport gl5_make_viewport(float x, float y, float Width, float Height, float MinDepth, float MaxDepth)
+{
+	gl5_viewport Viewport;
+	Viewport.Offset.x = x;
+	Viewport.Offset.y = y;
+	Viewport.Extent.x = Width;
+	Viewport.Extent.y = Height;
+	Viewport.Depth.x = MinDepth;
+	Viewport.Depth.y = MaxDepth;
+	return Viewport;
 }
 
 enum gl5_buffer_target
