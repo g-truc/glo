@@ -229,7 +229,7 @@ public:
 			vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 
 			gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
-			gl5_scissor(0, 1, &Rect);
+			gl5_scissors(0, 1, &Rect);
 
 			vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 			vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);

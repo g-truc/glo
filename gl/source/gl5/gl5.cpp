@@ -43,7 +43,7 @@ void gl5_bind_buffer(gl5_buffer_target Target, VkBuffer Buffer, uint32_t Offset,
 	}
 }
 
-void gl5_scissor(uint32_t First, uint32_t Count, gl5_rect const* Scissors)
+void gl5_scissors(uint32_t First, uint32_t Count, gl5_rect const* Scissors)
 {
 	assert(First + Count < glo::MAX_SCISSORS);
 	assert(Scissors);
