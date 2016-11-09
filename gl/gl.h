@@ -25,7 +25,8 @@ extern "C" {
 #endif
 
 #ifndef GL_VERSION_1_0
-#define GL_VERSION_1_0 1
+#	define GL_VERSION_1_0 1
+#endif
 
 typedef void GLvoid;
 typedef unsigned int GLenum;
@@ -38,10 +39,11 @@ typedef unsigned int GLuint;
 typedef unsigned char GLboolean;
 typedef unsigned char GLubyte;
 
-#endif /* GL_VERSION_1_0 */
+GLAPI void APIENTRY glScissor(GLint x, GLint y, GLsizei width, GLsizei height);
 
 #ifndef GL_VERSION_1_1
-#define GL_VERSION_1_1 1
+#	define GL_VERSION_1_1 1
+#endif
 
 #define GL_POINTS                         0x0000
 #define GL_LINES                          0x0001
@@ -59,10 +61,9 @@ typedef unsigned char GLubyte;
 #define GL_FLOAT                          0x1406
 #define GL_DOUBLE                         0x140A
 
-#endif /* GL_VERSION_1_1 */
-
 #ifndef GL_VERSION_1_5
-#define GL_VERSION_1_5 1
+#	define GL_VERSION_1_5 1
+#endif
 
 #include <stddef.h>
 typedef ptrdiff_t GLsizeiptr;
@@ -73,32 +74,30 @@ typedef ptrdiff_t GLintptr;
 //GLAPI void APIENTRY glBindBuffer(GLenum target, GLuint buffer);
 GLAPI void APIENTRY glBindBuffer(GLenum target, VkBuffer Buffer);
 
-#endif /* GL_VERSION_1_5 */
-
 #ifndef GL_VERSION_3_2
-#define GL_VERSION_3_2 1
+#	define GL_VERSION_3_2 1
+#endif
 
 #define GL_LINES_ADJACENCY                0x000A
 #define GL_LINE_STRIP_ADJACENCY           0x000B
 #define GL_TRIANGLES_ADJACENCY            0x000C
 #define GL_TRIANGLE_STRIP_ADJACENCY       0x000D
 
-#endif /* GL_VERSION_3_2 */
-
 #ifndef GL_VERSION_4_0
-#define GL_VERSION_4_0 1
+#	define GL_VERSION_4_0 1
+#endif
 
 #define GL_PATCHES                        0x000E
 
-#endif /* GL_VERSION_4_0 */
+GLAPI void APIENTRY glScissorArrayv(GLuint first, GLsizei count, const GLint *v);
+GLAPI void APIENTRY glScissorIndexed(GLuint index, GLint left, GLint bottom, GLsizei width, GLsizei height);
 
 #ifndef GL_VERSION_4_2
-#define GL_VERSION_4_2 1
+#	define GL_VERSION_4_2 1
+#endif
 
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance);
 GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance);
-
-#endif /* GL_VERSION_4_2 */
 
 #ifdef __cplusplus
 }

@@ -228,12 +228,8 @@ public:
 			viewport.maxDepth = (float) 1.0f;
 			vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 
-			VkRect2D scissor = {};
-			scissor.extent.width = width;
-			scissor.extent.height = height;
-			scissor.offset.x = 0;
-			scissor.offset.y = 0;
-			vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
+			GL5rect const Rect = gl5_make_rect(0, 0, width, height);
+			gl5Scissor(0, 1, &Rect);
 
 			vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 			vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);

@@ -230,12 +230,7 @@ public:
 			viewport.maxDepth = (float) 1.0f;
 			vkCmdSetViewport(drawCmdBuffers[i], 0, 1, &viewport);
 
-			VkRect2D scissor = {};
-			scissor.extent.width = width;
-			scissor.extent.height = height;
-			scissor.offset.x = 0;
-			scissor.offset.y = 0;
-			vkCmdSetScissor(drawCmdBuffers[i], 0, 1, &scissor);
+			glScissor(0, 0, width, height);
 
 			vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 			vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
@@ -620,7 +615,6 @@ public:
 		dependencies[1].dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
 		dependencies[1].dependencyFlags = VK_DEPENDENCY_BY_REGION_BIT;
 
-		// Create the actual renderpass
 		VkRenderPassCreateInfo renderPassInfo = {};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 		renderPassInfo.attachmentCount = static_cast<uint32_t>(attachments.size());

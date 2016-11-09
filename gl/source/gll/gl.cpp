@@ -57,6 +57,30 @@ namespace
 	}
 }//namespace
 
+GLAPI void APIENTRY glScissor(GLint x, GLint y, GLsizei Width, GLsizei Height)
+{
+	glScissorIndexed(0, x, y, Width, Height);
+}
+
+GLAPI void APIENTRY glBindBuffer(GLenum Target, VkBuffer Buffer)//GLuint Buffer)
+{
+	get_context()->bind_buffer(Target, Buffer);
+}
+
+GLAPI void APIENTRY glScissorArrayv(GLuint First, GLsizei Count, GLint const* ScissorArray)
+{
+	assert(First + Count < glo::MAX_SCISSORS);
+	assert(ScissorArray);
+
+	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(ScissorArray));
+}
+
+GLAPI void APIENTRY glScissorIndexed(GLuint Index, GLint Left, GLint Bottom, GLsizei Width, GLsizei Height)
+{
+	GLint const Scissor[] = {Left, Bottom, Width, Height};
+	glScissorArrayv(Index, 1, Scissor);
+}
+
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance (
 	GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
 {
@@ -72,7 +96,3 @@ GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(
 	get_context()->draw_indexed(Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
 }
 
-GLAPI void APIENTRY glBindBuffer(GLenum Target, VkBuffer Buffer)//GLuint Buffer)
-{
-	get_context()->bind_buffer(Target, Buffer);
-}

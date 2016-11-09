@@ -14,6 +14,31 @@ typedef void* GLbuffer;
 typedef void* GLpass;
 typedef void* GLpipeline;
 
+typedef struct GL5offset {
+	int32_t    x;
+	int32_t    y;
+} GL5offset;
+
+typedef struct GL5extent {
+	uint32_t	Width;
+	uint32_t	Height;
+} GL5extent;
+
+typedef struct GL5rect {
+	GL5offset	Offset;
+	GL5extent	Extent;
+} GL5rect;
+
+inline GL5rect gl5_make_rect(int32_t x, int32_t y, uint32_t Width, uint32_t Height)
+{
+	GL5rect Results;
+	Results.Offset.x = x;
+	Results.Offset.y = y;
+	Results.Extent.Width = Width;
+	Results.Extent.Height = Height;
+	return Results;
+}
+
 /*
 GLdevice glCreateDevice();
 void glReleaseDevice(GLdevice Device);
@@ -53,6 +78,7 @@ enum gl5BufferType
 void gl5Draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance);
 void gl5DrawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance);
 void gl5BindBuffer(gl5BufferTarget Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5BufferType Type);
+void gl5Scissor(uint32_t First, uint32_t Count, GL5rect const* Scissors);
 
 #ifdef __cplusplus
 }

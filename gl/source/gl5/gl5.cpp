@@ -31,6 +31,14 @@ void gl5DrawIndexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElemen
 	get_context()->draw_indexed(Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 }
 
+void APIENTRY gl5Scissor(uint32_t First, uint32_t Count, GL5rect const* Scissors)
+{
+	assert(First + Count < glo::MAX_SCISSORS);
+	assert(Scissors);
+
+	get_context()->set_dynamic_scissor(First, Count, reinterpret_cast<VkRect2D const*>(Scissors));
+}
+
 void gl5BindBuffer(gl5BufferTarget Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5BufferType Type)
 {
 	switch(Target)

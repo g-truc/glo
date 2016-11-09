@@ -51,6 +51,11 @@ namespace glo
 		this->Invalidated &= ~BIND_INDEX_BUFFER_INVALIDATED;
 	}
 
+	void context::set_dynamic_scissor(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rect)
+	{
+		vkCmdSetScissor(this->CurrentCommandBuffer, First, Count, Rect);
+	}
+
 	void context::validate_pipeline()
 	{
 
