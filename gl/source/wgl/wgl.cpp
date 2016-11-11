@@ -1,6 +1,6 @@
 #include "../../wgl.h"
-#include "../gll/context.hpp"
-#include "../gl5/context.hpp"
+#include "../gll/context_gl.hpp"
+#include "../gl5/context_gl5.hpp"
 
 namespace
 {

@@ -1,6 +1,6 @@
 #include "../../gl.h"
 #include "../external/vulkan/vulkan.h"
-#include "context.hpp"
+#include "context_gl.hpp"
 #include <cassert>
 
 namespace
