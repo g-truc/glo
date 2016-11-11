@@ -33,6 +33,7 @@ namespace glo
 		context(VkDevice CurrentDevice);
 		virtual ~context();
 
+		void makeCurrent();
 		void submit();
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
 		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
@@ -40,7 +41,7 @@ namespace glo
 		void set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects);
 		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);
 
-		VkCommandBuffer temp_activate_command_buffer(uint32_t CurrentCommandBufferIndex);
+		VkCommandBuffer temp_get_command_buffer() const;
 		void temp_set_queue(VkQueue CurrentQueue){this->CurrentQueue = CurrentQueue;}
 
 	protected:

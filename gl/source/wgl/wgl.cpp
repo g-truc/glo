@@ -51,7 +51,7 @@ BOOL WINAPI wglDeleteContextGTC(HGLRC hglrc)
 BOOL WINAPI wglMakeCurrentGTC(HDC hdc, HGLRC hglrc)
 {
 	::CurrentContext = (glo::context*)hglrc;
-
+	::CurrentContext->makeCurrent();
 	return TRUE;
 }
 

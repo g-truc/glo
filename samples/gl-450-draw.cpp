@@ -200,12 +200,7 @@ public:
 		wglMakeCurrentGTC(this->DeviceContext, this->Context);
 
 		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
-		VkCommandBuffer CommandBuffer = Context->temp_activate_command_buffer(currentBuffer);
-
-		VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
-		CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		CommandBufferBeginInfo.pNext = nullptr;
-		VK_CHECK_RESULT(vkBeginCommandBuffer(CommandBuffer, &CommandBufferBeginInfo));
+		VkCommandBuffer CommandBuffer = Context->temp_get_command_buffer();
 
 		VkClearValue clearValues[2];
 		clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
@@ -239,7 +234,7 @@ public:
 
 		vkCmdEndRenderPass(CommandBuffer);
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(CommandBuffer));
+		glFlush();
 
 		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 		VkSubmitInfo submitInfo = {};

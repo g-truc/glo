@@ -46,9 +46,26 @@ namespace glo
 		vkDestroyCommandPool(this->CurrentDevice, this->CommandPool, nullptr);
 	}
 
+	void context::makeCurrent()
+	{
+		++this->CurrentCommandBufferIndex;
+		if (this->CurrentCommandBufferIndex == 3)
+			this->CurrentCommandBufferIndex = 0;
+
+		VkResult Result = vkResetCommandBuffer(this->CommandBuffers[CurrentCommandBufferIndex], 0);
+		assert(Result == VK_SUCCESS);
+
+		VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
+		CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		CommandBufferBeginInfo.pNext = nullptr;
+		Result = vkBeginCommandBuffer(this->CommandBuffers[CurrentCommandBufferIndex], &CommandBufferBeginInfo);
+		assert(Result == VK_SUCCESS);
+	}
+
 	void context::submit()
 	{
-
+		VkResult Result = vkEndCommandBuffer(this->CommandBuffers[CurrentCommandBufferIndex]);
+		assert(Result == VK_SUCCESS);
 	}
 
 	void context::draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
@@ -89,9 +106,8 @@ namespace glo
 		this->Invalidated &= ~INVALIDATED_PIPELINE_BIT;
 	}
 
-	VkCommandBuffer context::temp_activate_command_buffer(uint32_t CurrentCommandBufferIndex)
+	VkCommandBuffer context::temp_get_command_buffer() const
 	{
-		this->CurrentCommandBufferIndex = CurrentCommandBufferIndex;
 		return this->CommandBuffers[this->CurrentCommandBufferIndex];
 	}
 

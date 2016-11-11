@@ -58,3 +58,8 @@ void gl5_viewports(uint32_t First, uint32_t Count, gl5_viewport const* Viewports
 
 	get_context()->set_dynamic_viewports(First, Count, reinterpret_cast<VkViewport const*>(Viewports));
 }
+
+void gl5_flush()
+{
+	get_context()->submit();
+}

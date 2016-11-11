@@ -73,6 +73,7 @@ void gl5_draw_indexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElem
 void gl5_bind_buffer(gl5_buffer_target Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5_buffer_type Type);
 void gl5_scissors(uint32_t First, uint32_t Count, gl5_rect const* Scissors);
 void gl5_viewports(uint32_t First, uint32_t Count, gl5_viewport const* Viewports);
+void gl5_flush();
 
 #ifdef __cplusplus
 }
