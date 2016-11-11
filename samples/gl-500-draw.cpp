@@ -137,7 +137,7 @@ public:
 		VkFenceCreateInfo fenceCreateInfo = {};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-		waitFences.resize(drawCmdBuffers.size());
+		waitFences.resize(swapChain.imageCount);
 		for (auto& fence : waitFences)
 		{
 			VK_CHECK_RESULT(vkCreateFence(device, &fenceCreateInfo, nullptr, &fence));
@@ -200,7 +200,7 @@ public:
 		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
 		VkCommandBuffer CommandBuffer = Context->temp_activate_command_buffer(currentBuffer);
 
-		VK_CHECK_RESULT(vkResetCommandBuffer(drawCmdBuffers[currentBuffer], 0));
+		VK_CHECK_RESULT(vkResetCommandBuffer(CommandBuffer, 0));
 
 		VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
 		CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;

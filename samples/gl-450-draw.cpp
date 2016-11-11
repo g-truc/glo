@@ -139,7 +139,7 @@ public:
 		VkFenceCreateInfo fenceCreateInfo = {};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-		waitFences.resize(drawCmdBuffers.size());
+		waitFences.resize(swapChain.imageCount);
 		for (auto& fence : waitFences)
 		{
 			VK_CHECK_RESULT(vkCreateFence(device, &fenceCreateInfo, nullptr, &fence));

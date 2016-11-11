@@ -61,7 +61,6 @@ protected:
 	VkCommandBuffer setupCmdBuffer = VK_NULL_HANDLE;
 	VkPipelineStageFlags submitPipelineStages = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo submitInfo;
-	std::vector<VkCommandBuffer> drawCmdBuffers;
 	VkRenderPass renderPass;
 	std::vector<VkFramebuffer>frameBuffers;
 	uint32_t currentBuffer = 0;
@@ -131,7 +130,6 @@ public:
 	virtual void viewChanged();
 	virtual void keyPressed(uint32_t keyCode);
 	virtual void windowResized();
-	virtual void buildCommandBuffers();
 
 	void createCommandPool();
 	virtual void setupDepthStencil();
@@ -142,8 +140,6 @@ public:
 	void setupSwapChain();
 
 	bool checkCommandBuffers();
-	void createCommandBuffers();
-	void destroyCommandBuffers();
 	void createSetupCommandBuffer();
 	void flushSetupCommandBuffer();
 

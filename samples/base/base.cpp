@@ -48,36 +48,6 @@ const std::string gl_base::getAssetPath()
 	return std::string(SOURCE_DIR) + "/data/";
 }
 
-bool gl_base::checkCommandBuffers()
-{
-	for (auto& cmdBuffer : drawCmdBuffers)
-	{
-		if (cmdBuffer == VK_NULL_HANDLE)
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-void gl_base::createCommandBuffers()
-{
-	drawCmdBuffers.resize(swapChain.imageCount);
-
-	VkCommandBufferAllocateInfo cmdBufAllocateInfo =
-		vkTools::initializers::commandBufferAllocateInfo(
-			cmdPool,
-			VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-			static_cast<uint32_t>(drawCmdBuffers.size()));
-
-	VK_CHECK_RESULT(vkAllocateCommandBuffers(device, &cmdBufAllocateInfo, drawCmdBuffers.data()));
-}
-
-void gl_base::destroyCommandBuffers()
-{
-	vkFreeCommandBuffers(device, cmdPool, static_cast<uint32_t>(drawCmdBuffers.size()), drawCmdBuffers.data());
-}
-
 void gl_base::createSetupCommandBuffer()
 {
 	if (setupCmdBuffer != VK_NULL_HANDLE)
@@ -177,7 +147,6 @@ void gl_base::prepare()
 	createCommandPool();
 	createSetupCommandBuffer();
 	setupSwapChain();
-	createCommandBuffers();
 	setupDepthStencil();
 	setupRenderPass();
 	createPipelineCache();
@@ -363,7 +332,6 @@ gl_base::~gl_base()
 		vkFreeCommandBuffers(device, cmdPool, 1, &setupCmdBuffer);
 
 	}
-	destroyCommandBuffers();
 	vkDestroyRenderPass(device, renderPass, nullptr);
 	for (uint32_t i = 0; i < frameBuffers.size(); i++)
 	{
@@ -731,11 +699,6 @@ void gl_base::keyPressed(uint32_t keyCode)
 
 }
 
-void gl_base::buildCommandBuffers()
-{
-
-}
-
 uint32_t g_QueueFamilyIndex = 0;
 
 void gl_base::createCommandPool()
@@ -912,10 +875,6 @@ void gl_base::windowResize()
 	setupFrameBuffer();
 
 	flushSetupCommandBuffer();
-
-	destroyCommandBuffers();
-	createCommandBuffers();
-	buildCommandBuffers();
 
 	vkQueueWaitIdle(queue);
 	vkDeviceWaitIdle(device);
