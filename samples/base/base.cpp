@@ -290,17 +290,6 @@ void gl_base::renderLoop()
 	vkDeviceWaitIdle(device);
 }
 
-void gl_base::prepareFrame()
-{
-	VK_CHECK_RESULT(swapChain.acquireNextImage(semaphores.presentComplete, &currentBuffer));
-}
-
-void gl_base::submitFrame()
-{
-	VK_CHECK_RESULT(swapChain.queuePresent(queue, currentBuffer, semaphores.renderComplete));
-	VK_CHECK_RESULT(vkQueueWaitIdle(queue));
-}
-
 gl_base::gl_base(bool enableValidation, PFN_GetEnabledFeatures enabledFeaturesFn)
 {
 	for (int32_t i = 0; i < __argc; i++)
@@ -322,7 +311,7 @@ gl_base::gl_base(bool enableValidation, PFN_GetEnabledFeatures enabledFeaturesFn
 
 gl_base::~gl_base()
 {
-	swapChain.cleanup();
+	Swapchain.cleanup();
 	if (descriptorPool != VK_NULL_HANDLE)
 	{
 		vkDestroyDescriptorPool(device, descriptorPool, nullptr);
@@ -410,7 +399,7 @@ void gl_base::initVulkan(bool enableValidation)
 	VkBool32 validDepthFormat = vkTools::getSupportedDepthFormat(physicalDevice, &depthFormat);
 	assert(validDepthFormat);
 
-	swapChain.connect(instance, physicalDevice, device);
+	Swapchain.connect(instance, physicalDevice, device);
 
 	VkSemaphoreCreateInfo semaphoreCreateInfo = vkTools::initializers::semaphoreCreateInfo();
 	VK_CHECK_RESULT(vkCreateSemaphore(device, &semaphoreCreateInfo, nullptr, &semaphores.presentComplete));
@@ -705,7 +694,7 @@ void gl_base::createCommandPool()
 {
 	VkCommandPoolCreateInfo cmdPoolInfo = {};
 	cmdPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	g_QueueFamilyIndex = cmdPoolInfo.queueFamilyIndex = swapChain.queueNodeIndex;
+	g_QueueFamilyIndex = cmdPoolInfo.queueFamilyIndex = Swapchain.queueNodeIndex;
 	cmdPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	VK_CHECK_RESULT(vkCreateCommandPool(device, &cmdPoolInfo, nullptr, &cmdPool));
 }
@@ -773,10 +762,10 @@ void gl_base::setupFrameBuffer()
 	frameBufferCreateInfo.height = height;
 	frameBufferCreateInfo.layers = 1;
 
-	frameBuffers.resize(swapChain.imageCount);
+	frameBuffers.resize(Swapchain.imageCount);
 	for (uint32_t i = 0; i < frameBuffers.size(); i++)
 	{
-		attachments[0] = swapChain.buffers[i].view;
+		attachments[0] = Swapchain.buffers[i].view;
 		VK_CHECK_RESULT(vkCreateFramebuffer(device, &frameBufferCreateInfo, nullptr, &frameBuffers[i]));
 	}
 }
@@ -894,10 +883,10 @@ void gl_base::windowResized()
 
 void gl_base::initSwapchain()
 {
-	swapChain.initSurface(windowInstance, window);
+	Swapchain.init(windowInstance, window);
 }
 
 void gl_base::setupSwapChain()
 {
-	swapChain.create(&width, &height, enableVSync);
+	Swapchain.create(&width, &height, enableVSync);
 }

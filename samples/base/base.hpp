@@ -67,7 +67,7 @@ protected:
 	VkDescriptorPool descriptorPool = VK_NULL_HANDLE;
 	std::vector<VkShaderModule> shaderModules;
 	VkPipelineCache pipelineCache;
-	VulkanSwapChain swapChain;
+	swapchain Swapchain;
 
 	struct {
 		VkSemaphore presentComplete;
@@ -139,7 +139,6 @@ public:
 	void initSwapchain();
 	void setupSwapChain();
 
-	bool checkCommandBuffers();
 	void createSetupCommandBuffer();
 	void flushSetupCommandBuffer();
 
@@ -185,9 +184,6 @@ public:
 		VkDescriptorBufferInfo *descriptor);
 
 	void renderLoop();
-	void prepareFrame();
-	void submitFrame();
-
 };
 
 #define VULKAN_EXAMPLE_MAIN()																		\

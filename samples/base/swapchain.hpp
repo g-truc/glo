@@ -41,7 +41,7 @@ typedef struct _SwapChainBuffers {
 	VkImageView view;
 } SwapChainBuffer;
 
-class VulkanSwapChain
+class swapchain
 {
 private: 
 	VkInstance instance;
@@ -70,15 +70,7 @@ public:
 	/** @brief Queue family index of the deteced graphics and presenting device queue */
 	uint32_t queueNodeIndex = UINT32_MAX;
 
-	// Creates an os specific surface
-	/**
-	* Create the surface object, an abstraction for the native platform window
-	*
-	* @pre Windows
-	* @param platformHandle HINSTANCE of the window to create the surface for
-	* @param platformWindow HWND of the window to create the surface for
-	*/
-	void initSurface(void* platformHandle, void* platformWindow)
+	void init(void* platformHandle, void* platformWindow)
 	{
 		VkResult err;
 
@@ -182,14 +174,6 @@ public:
 		colorSpace = surfaceFormats[0].colorSpace;
 	}
 
-	/**
-	* Set instance, physical and logical device to use for the swpachain and get all required function pointers
-	* 
-	* @param instance Vulkan instance to use
-	* @param physicalDevice Physical device used to query properties and formats relevant to the swapchain
-	* @param device Logical representation of the device to create the swapchain for
-	*
-	*/
 	void connect(VkInstance instance, VkPhysicalDevice physicalDevice, VkDevice device)
 	{
 		this->instance = instance;
@@ -206,13 +190,6 @@ public:
 		GET_DEVICE_PROC_ADDR(device, QueuePresentKHR);
 	}
 
-	/** 
-	* Create the swapchain and get it's images with given width and height
-	* 
-	* @param width Pointer to the width of the swapchain (may be adjusted to fit the requirements of the swapchain)
-	* @param height Pointer to the height of the swapchain (may be adjusted to fit the requirements of the swapchain)
-	* @param vsync (Optional) Can be used to force vsync'd rendering (by using VK_PRESENT_MODE_FIFO_KHR as presentation mode)
-	*/
 	void create(uint32_t *width, uint32_t *height, bool vsync = false)
 	{
 		VkResult err;
@@ -368,53 +345,33 @@ public:
 		}
 	}
 
-	/** 
-	* Acquires the next image in the swap chain
-	*
-	* @param presentCompleteSemaphore (Optional) Semaphore that is signaled when the image is ready for use
-	* @param imageIndex Pointer to the image index that will be increased if the next image could be acquired
-	*
-	* @note The function will always wait until the next image has been acquired by setting timeout to UINT64_MAX
-	*
-	* @return VkResult of the image acquisition
-	*/
-	VkResult acquireNextImage(VkSemaphore presentCompleteSemaphore, uint32_t *imageIndex)
+	VkResult acquire(VkSemaphore presentCompleteSemaphore, uint32_t *imageIndex)
 	{
 		// By setting timeout to UINT64_MAX we will always wait until the next image has been acquired or an actual error is thrown
 		// With that we don't have to handle VK_NOT_READY
 		return fpAcquireNextImageKHR(device, swapChain, UINT64_MAX, presentCompleteSemaphore, (VkFence)nullptr, imageIndex);
 	}
 
-	/**
-	* Queue an image for presentation
-	*
-	* @param queue Presentation queue for presenting the image
-	* @param imageIndex Index of the swapchain image to queue for presentation
-	* @param waitSemaphore (Optional) Semaphore that is waited on before the image is presented (only used if != VK_NULL_HANDLE)
-	*
-	* @return VkResult of the queue presentation
-	*/
-	VkResult queuePresent(VkQueue queue, uint32_t imageIndex, VkSemaphore waitSemaphore = VK_NULL_HANDLE)
+	VkResult present(VkQueue Queue, uint32_t ImageIndex, VkSemaphore Render)
 	{
-		VkPresentInfoKHR presentInfo = {};
-		presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-		presentInfo.pNext = NULL;
-		presentInfo.swapchainCount = 1;
-		presentInfo.pSwapchains = &swapChain;
-		presentInfo.pImageIndices = &imageIndex;
-		// Check if a wait semaphore has been specified to wait for before presenting the image
-		if (waitSemaphore != VK_NULL_HANDLE)
+		VkPresentInfoKHR PresentInfo = {};
+		PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+		PresentInfo.pNext = NULL;
+		PresentInfo.swapchainCount = 1;
+		PresentInfo.pSwapchains = &swapChain;
+		PresentInfo.pImageIndices = &ImageIndex;
+
+		if (Render != VK_NULL_HANDLE)
 		{
-			presentInfo.pWaitSemaphores = &waitSemaphore;
-			presentInfo.waitSemaphoreCount = 1;
+			PresentInfo.pWaitSemaphores = &Render;
+			PresentInfo.waitSemaphoreCount = 1;
 		}
-		return fpQueuePresentKHR(queue, &presentInfo);
+		VkResult Result = fpQueuePresentKHR(Queue, &PresentInfo);
+		assert(Result == VK_SUCCESS);
+
+		return Result;
 	}
 
-
-	/**
-	* Destroy and free Vulkan resources used for the swapchain
-	*/
 	void cleanup()
 	{
 		if (swapChain != VK_NULL_HANDLE)

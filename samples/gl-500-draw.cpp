@@ -137,7 +137,7 @@ public:
 		VkFenceCreateInfo fenceCreateInfo = {};
 		fenceCreateInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 		fenceCreateInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-		waitFences.resize(swapChain.imageCount);
+		waitFences.resize(Swapchain.imageCount);
 		for (auto& fence : waitFences)
 		{
 			VK_CHECK_RESULT(vkCreateFence(device, &fenceCreateInfo, nullptr, &fence));
@@ -191,7 +191,7 @@ public:
 
 	void draw()
 	{
-		VK_CHECK_RESULT(swapChain.acquireNextImage(presentCompleteSemaphore, &currentBuffer));
+		VK_CHECK_RESULT(Swapchain.acquire(presentCompleteSemaphore, &currentBuffer));
 		VK_CHECK_RESULT(vkWaitForFences(device, 1, &waitFences[currentBuffer], VK_TRUE, UINT64_MAX));
 		VK_CHECK_RESULT(vkResetFences(device, 1, &waitFences[currentBuffer]));
 
@@ -249,7 +249,7 @@ public:
 		submitInfo.commandBufferCount = 1;
 
 		VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, waitFences[currentBuffer]));
-		VK_CHECK_RESULT(swapChain.queuePresent(queue, currentBuffer, renderCompleteSemaphore));
+		VK_CHECK_RESULT(Swapchain.present(queue, currentBuffer, renderCompleteSemaphore));
 	}
 
 	void prepareVertices(bool useStagingBuffers)
@@ -520,11 +520,11 @@ public:
 
 	void setupFrameBuffer()
 	{
-		frameBuffers.resize(swapChain.imageCount);
+		frameBuffers.resize(Swapchain.imageCount);
 		for (size_t i = 0; i < frameBuffers.size(); i++)
 		{
 			std::array<VkImageView, 2> attachments;
-			attachments[0] = swapChain.buffers[i].view;
+			attachments[0] = Swapchain.buffers[i].view;
 			attachments[1] = depthStencil.view;
 
 			VkFramebufferCreateInfo frameBufferCreateInfo = {};
