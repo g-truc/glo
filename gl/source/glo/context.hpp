@@ -30,8 +30,8 @@ namespace glo
 	class context
 	{
 	public:
-		context();
-		virtual ~context(){}
+		context(VkDevice CurrentDevice);
+		virtual ~context();
 
 		void submit();
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
@@ -40,7 +40,7 @@ namespace glo
 		void set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects);
 		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);
 
-		void temp_set_command_buffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
+		VkCommandBuffer temp_activate_command_buffer(uint32_t CurrentCommandBufferIndex);
 		void temp_set_queue(VkQueue CurrentQueue){this->CurrentQueue = CurrentQueue;}
 
 	protected:
@@ -57,8 +57,12 @@ namespace glo
 	private:
 		void validate_pipeline();
 
+		VkCommandPool CommandPool;
+		std::array<VkCommandBuffer, 3> CommandBuffers;
+
+		VkDevice CurrentDevice;
 		VkQueue CurrentQueue;
-		VkCommandBuffer CurrentCommandBuffer;
+		uint32_t CurrentCommandBufferIndex;
 
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};

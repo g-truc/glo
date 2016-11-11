@@ -2,7 +2,8 @@
 
 namespace gll
 {
-	context::context()
+	context::context(VkDevice Device)
+		: glo::context(Device)
 	{
 		for(std::size_t i = 0; i < glo::MAX_VIEWPORTS; ++i)
 		{

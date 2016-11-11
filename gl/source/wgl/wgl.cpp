@@ -14,6 +14,8 @@ namespace
 
 HGLRC WINAPI wglCreateContextAttribsGTC(HDC hdc, HGLRC hShareContext, const int *attribList)
 {
+	VkDevice Device = (VkDevice)hdc;
+
 	int DefaultAttribList[1] =
 	{
 		WGL_CONTEXT_CORE_PROFILE_BIT_ARB // CONTEXT_ATTRIBUTE_PROFILE
@@ -31,9 +33,9 @@ HGLRC WINAPI wglCreateContextAttribsGTC(HDC hdc, HGLRC hShareContext, const int 
 
 	glo::context* Context = nullptr;
 	if(DefaultAttribList[CONTEXT_ATTRIBUTE_PROFILE] == WGL_CONTEXT_GL5_PROFILE_BIT_GTC)
-		Context = new gl5::context;
+		Context = new gl5::context(Device);
 	else
-		Context = new gll::context;
+		Context = new gll::context(Device);
 
 	return (HGLRC)Context;
 }

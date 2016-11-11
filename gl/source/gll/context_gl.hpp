@@ -9,7 +9,7 @@ namespace gll
 	class context : public glo::context
 	{
 	public:
-		context();
+		context(VkDevice CurrentDevice);
 
 		void set_primitive_topology(VkPrimitiveTopology Primitive)
 		{

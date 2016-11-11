@@ -736,11 +736,13 @@ void gl_base::buildCommandBuffers()
 
 }
 
+uint32_t g_QueueFamilyIndex = 0;
+
 void gl_base::createCommandPool()
 {
 	VkCommandPoolCreateInfo cmdPoolInfo = {};
 	cmdPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	cmdPoolInfo.queueFamilyIndex = swapChain.queueNodeIndex;
+	g_QueueFamilyIndex = cmdPoolInfo.queueFamilyIndex = swapChain.queueNodeIndex;
 	cmdPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	VK_CHECK_RESULT(vkCreateCommandPool(device, &cmdPoolInfo, nullptr, &cmdPool));
 }

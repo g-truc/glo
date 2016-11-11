@@ -71,8 +71,8 @@ public:
 			WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_GL5_PROFILE_BIT_GTC,
 			0, 0};
 
+		this->DeviceContext = (HDC)this->device;
 		this->Context = wglCreateContextAttribsGTC(this->DeviceContext, nullptr, attribList);
-		wglMakeCurrentGTC(this->DeviceContext, this->Context);
 
 		width = 1280;
 		height = 720;
@@ -195,34 +195,34 @@ public:
 		VK_CHECK_RESULT(vkWaitForFences(device, 1, &waitFences[currentBuffer], VK_TRUE, UINT64_MAX));
 		VK_CHECK_RESULT(vkResetFences(device, 1, &waitFences[currentBuffer]));
 
-		VkCommandBufferBeginInfo cmdBufInfo = {};
-		cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		cmdBufInfo.pNext = nullptr;
+		wglMakeCurrentGTC(this->DeviceContext, this->Context);
+
+		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
+		VkCommandBuffer CommandBuffer = Context->temp_activate_command_buffer(currentBuffer);
+
+		VK_CHECK_RESULT(vkResetCommandBuffer(drawCmdBuffers[currentBuffer], 0));
+
+		VkCommandBufferBeginInfo CommandBufferBeginInfo = {};
+		CommandBufferBeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+		CommandBufferBeginInfo.pNext = nullptr;
+		VK_CHECK_RESULT(vkBeginCommandBuffer(CommandBuffer, &CommandBufferBeginInfo));
 
 		VkClearValue clearValues[2];
 		clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
 		clearValues[1].depthStencil = { 1.0f, 0 };
 
-		VkRenderPassBeginInfo renderPassBeginInfo = {};
-		renderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		renderPassBeginInfo.pNext = nullptr;
-		renderPassBeginInfo.renderPass = renderPass;
-		renderPassBeginInfo.renderArea.offset.x = 0;
-		renderPassBeginInfo.renderArea.offset.y = 0;
-		renderPassBeginInfo.renderArea.extent.width = width;
-		renderPassBeginInfo.renderArea.extent.height = height;
-		renderPassBeginInfo.clearValueCount = 2;
-		renderPassBeginInfo.pClearValues = clearValues;
-		renderPassBeginInfo.framebuffer = frameBuffers[currentBuffer];
-
-		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
-		Context->temp_set_command_buffer(drawCmdBuffers[currentBuffer]);
-
-		VK_CHECK_RESULT(vkResetCommandBuffer(drawCmdBuffers[currentBuffer], 0));
-
-		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[currentBuffer], &cmdBufInfo));
-
-		vkCmdBeginRenderPass(drawCmdBuffers[currentBuffer], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		VkRenderPassBeginInfo RenderPassBeginInfo = {};
+		RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		RenderPassBeginInfo.pNext = nullptr;
+		RenderPassBeginInfo.renderPass = renderPass;
+		RenderPassBeginInfo.renderArea.offset.x = 0;
+		RenderPassBeginInfo.renderArea.offset.y = 0;
+		RenderPassBeginInfo.renderArea.extent.width = width;
+		RenderPassBeginInfo.renderArea.extent.height = height;
+		RenderPassBeginInfo.clearValueCount = 2;
+		RenderPassBeginInfo.pClearValues = clearValues;
+		RenderPassBeginInfo.framebuffer = frameBuffers[currentBuffer];
+		vkCmdBeginRenderPass(CommandBuffer, &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		gl5_viewport const Viewport = gl5_make_viewport(0, 0, width, height, 0.0f, 1.0f);
 		gl5_viewports(0, 1, &Viewport);
@@ -230,19 +230,19 @@ public:
 		gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
 		gl5_scissors(0, 1, &Rect);
 
-		vkCmdBindDescriptorSets(drawCmdBuffers[currentBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
-		vkCmdBindPipeline(drawCmdBuffers[currentBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		vkCmdBindDescriptorSets(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
+		vkCmdBindPipeline(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
 		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(drawCmdBuffers[currentBuffer], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
+		vkCmdBindVertexBuffers(CommandBuffer, VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
 
 		gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
 		gl5_draw_indexed(indices.count, 1, 0, 0, 0);
 
-		vkCmdEndRenderPass(drawCmdBuffers[currentBuffer]);
+		vkCmdEndRenderPass(CommandBuffer);
 
-		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[currentBuffer]));
+		VK_CHECK_RESULT(vkEndCommandBuffer(CommandBuffer));
 
 		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 		VkSubmitInfo submitInfo = {};
@@ -252,7 +252,7 @@ public:
 		submitInfo.waitSemaphoreCount = 1;
 		submitInfo.pSignalSemaphores = &renderCompleteSemaphore;
 		submitInfo.signalSemaphoreCount = 1;
-		submitInfo.pCommandBuffers = &drawCmdBuffers[currentBuffer];
+		submitInfo.pCommandBuffers = &CommandBuffer;
 		submitInfo.commandBufferCount = 1;
 
 		VK_CHECK_RESULT(vkQueueSubmit(queue, 1, &submitInfo, waitFences[currentBuffer]));
