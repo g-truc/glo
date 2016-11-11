@@ -31,4 +31,9 @@ namespace gll
 
 		this->glo::context::draw_indexed(Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 	}
+
+	void context::flush()
+	{
+
+	}
 }//namespace gll

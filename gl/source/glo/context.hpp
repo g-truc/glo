@@ -33,6 +33,7 @@ namespace glo
 		context();
 		virtual ~context(){}
 
+		void submit();
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
 		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
 		void bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
@@ -40,6 +41,7 @@ namespace glo
 		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);
 
 		void temp_set_command_buffer(VkCommandBuffer CurrentCommandBuffer) {this->CurrentCommandBuffer = CurrentCommandBuffer;}
+		void temp_set_queue(VkQueue CurrentQueue){this->CurrentQueue = CurrentQueue;}
 
 	protected:
 		enum
@@ -55,7 +57,9 @@ namespace glo
 	private:
 		void validate_pipeline();
 
+		VkQueue CurrentQueue;
 		VkCommandBuffer CurrentCommandBuffer;
+
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};
 

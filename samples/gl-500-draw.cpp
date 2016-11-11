@@ -189,8 +189,12 @@ public:
 		vkFreeCommandBuffers(device, cmdPool, 1, &commandBuffer);
 	}
 
-	void buildCommandBuffers()
+	void draw()
 	{
+		VK_CHECK_RESULT(swapChain.acquireNextImage(presentCompleteSemaphore, &currentBuffer));
+		VK_CHECK_RESULT(vkWaitForFences(device, 1, &waitFences[currentBuffer], VK_TRUE, UINT64_MAX));
+		VK_CHECK_RESULT(vkResetFences(device, 1, &waitFences[currentBuffer]));
+
 		VkCommandBufferBeginInfo cmdBufInfo = {};
 		cmdBufInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		cmdBufInfo.pNext = nullptr;
@@ -209,45 +213,36 @@ public:
 		renderPassBeginInfo.renderArea.extent.height = height;
 		renderPassBeginInfo.clearValueCount = 2;
 		renderPassBeginInfo.pClearValues = clearValues;
-	
-		for (int32_t i = 0; i < drawCmdBuffers.size(); ++i)
-		{
-			renderPassBeginInfo.framebuffer = frameBuffers[i];
+		renderPassBeginInfo.framebuffer = frameBuffers[currentBuffer];
 
-			glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
-			Context->temp_set_command_buffer(drawCmdBuffers[i]);
+		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
+		Context->temp_set_command_buffer(drawCmdBuffers[currentBuffer]);
 
-			VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[i], &cmdBufInfo));
+		VK_CHECK_RESULT(vkResetCommandBuffer(drawCmdBuffers[currentBuffer], 0));
 
-			vkCmdBeginRenderPass(drawCmdBuffers[i], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+		VK_CHECK_RESULT(vkBeginCommandBuffer(drawCmdBuffers[currentBuffer], &cmdBufInfo));
 
-			gl5_viewport const Viewport = gl5_make_viewport(0, 0, width, height, 0.0f, 1.0f);
-			gl5_viewports(0, 1, &Viewport);
+		vkCmdBeginRenderPass(drawCmdBuffers[currentBuffer], &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-			gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
-			gl5_scissors(0, 1, &Rect);
+		gl5_viewport const Viewport = gl5_make_viewport(0, 0, width, height, 0.0f, 1.0f);
+		gl5_viewports(0, 1, &Viewport);
 
-			vkCmdBindDescriptorSets(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
-			vkCmdBindPipeline(drawCmdBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
+		gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
+		gl5_scissors(0, 1, &Rect);
 
-			VkDeviceSize offsets[1] = { 0 };
-			vkCmdBindVertexBuffers(drawCmdBuffers[i], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
+		vkCmdBindDescriptorSets(drawCmdBuffers[currentBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
+		vkCmdBindPipeline(drawCmdBuffers[currentBuffer], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-			gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
+		VkDeviceSize offsets[1] = { 0 };
+		vkCmdBindVertexBuffers(drawCmdBuffers[currentBuffer], VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
 
-			gl5_draw_indexed(indices.count, 1, 0, 0, 0);
+		gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
-			vkCmdEndRenderPass(drawCmdBuffers[i]);
+		gl5_draw_indexed(indices.count, 1, 0, 0, 0);
 
-			VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[i]));
-		}
-	}
+		vkCmdEndRenderPass(drawCmdBuffers[currentBuffer]);
 
-	void draw()
-	{
-		VK_CHECK_RESULT(swapChain.acquireNextImage(presentCompleteSemaphore, &currentBuffer));
-		VK_CHECK_RESULT(vkWaitForFences(device, 1, &waitFences[currentBuffer], VK_TRUE, UINT64_MAX));
-		VK_CHECK_RESULT(vkResetFences(device, 1, &waitFences[currentBuffer]));
+		VK_CHECK_RESULT(vkEndCommandBuffer(drawCmdBuffers[currentBuffer]));
 
 		VkPipelineStageFlags waitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 		VkSubmitInfo submitInfo = {};
@@ -757,7 +752,6 @@ public:
 		preparePipelines();
 		setupDescriptorPool();
 		setupDescriptorSet();
-		buildCommandBuffers();
 		prepared = true;
 	}
 

@@ -57,6 +57,11 @@ namespace
 	}
 }//namespace
 
+GLAPI void APIENTRY glFlush(void)
+{
+	get_context()->flush();
+}
+
 GLAPI void APIENTRY glScissor(GLint x, GLint y, GLsizei Width, GLsizei Height)
 {
 	glScissorIndexed(0, x, y, Width, Height);

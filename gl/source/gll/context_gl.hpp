@@ -55,6 +55,8 @@ namespace gll
 
 		void draw_indexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElement, int32_t BaseVertex, uint32_t BaseInstance);
 
+		void flush();
+
 	private:
 		struct dynamic_viewport
 		{

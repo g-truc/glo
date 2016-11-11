@@ -21,6 +21,11 @@ namespace glo
 		this->CurrentPipelineDesc.GraphicsPipeline.pViewportState = &this->CurrentPipelineDesc.ViewportState;
 	}
 
+	void context::submit()
+	{
+
+	}
+
 	void context::draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance)
 	{
 		if(this->Invalidated & INVALIDATED_PIPELINE_BIT)

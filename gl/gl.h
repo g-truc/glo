@@ -39,6 +39,7 @@ typedef unsigned int GLuint;
 typedef unsigned char GLboolean;
 typedef unsigned char GLubyte;
 
+GLAPI void APIENTRY glFlush(void);
 GLAPI void APIENTRY glScissor(GLint x, GLint y, GLsizei width, GLsizei height);
 
 #ifndef GL_VERSION_1_1
