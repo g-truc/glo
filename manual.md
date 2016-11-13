@@ -1,3 +1,5 @@
+![Alt](/doc/manual/logo-mini.png "GLO Logo")
+
 # GLO 0.5.0.0 Manual
 
 ![Alt](/doc/manual/g-truc.png "G-Truc Logo")

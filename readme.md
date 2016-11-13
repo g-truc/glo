@@ -1,3 +1,5 @@
+![glo](/doc/manual/logo-mini.png)
+
 OpenGL Overload (*GLO*) aims at being a cross-platform implementation of OpenGL and building a streamline and modern APIs friendly OpenGL like API.
 
 While Vulkan is a great explict graphics API, it's effortable only for a small part of the ecosystem. Furthermore, the multiplication of proprietary graphics APIs has fragmented the ecosystem.
