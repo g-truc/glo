@@ -100,6 +100,12 @@ namespace glo
 		vkCmdDrawIndexed(this->CommandBuffers[CurrentCommandBufferIndex], Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 	}
 
+	void context::bind_vertex_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset)
+	{
+		VkDeviceSize offsets[1] = {0};
+		vkCmdBindVertexBuffers(this->CommandBuffers[CurrentCommandBufferIndex], Binding, 1, &Buffer, &Offset);
+	}
+
 	void context::bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType)
 	{
 		vkCmdBindIndexBuffer(this->CommandBuffers[CurrentCommandBufferIndex], Buffer, Offset, IndexType);

@@ -31,11 +31,15 @@ void gl5_draw_indexed(uint32_t Count, uint32_t InstanceCount, uint32_t FirstElem
 	get_context()->draw_indexed(Count, InstanceCount, FirstElement, BaseVertex, BaseInstance);
 }
 
-void gl5_bind_buffer(gl5_buffer_target Target, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5_buffer_type Type)
+void gl5_bind_buffer(gl5_buffer_target Target, uint32_t Binding, VkBuffer Buffer, uint32_t Offset, uint32_t Range, gl5_buffer_type Type)
 {
 	switch(Target)
 	{
+	case GL5_BUFFER_VERTEX:
+		get_context()->bind_vertex_buffer(Buffer, Binding, Offset);
+		break;
 	case GL5_BUFFER_INDEX:
+		assert(Binding == 0);
 		get_context()->bind_index_buffer(Buffer, Offset, ::translate_index_type(Type));
 		break;
 	default:

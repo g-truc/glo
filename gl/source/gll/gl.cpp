@@ -101,18 +101,21 @@ GLAPI void APIENTRY glDepthRangeIndexed(GLuint Index, GLdouble Near, GLdouble Fa
 	get_context()->set_dynamic_depth_range(Index, static_cast<float>(Near), static_cast<float>(Far));
 }
 
-GLAPI void APIENTRY glDrawArraysInstancedBaseInstance (
-	GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
+GLAPI void APIENTRY glDrawArraysInstancedBaseInstance(GLenum Mode, GLint First, GLsizei Count, GLsizei InstanceCount, GLuint BaseInstance)
 {
 	get_context()->set_primitive_topology(::translate_primitive_topology(Mode));
 	get_context()->draw(Count, InstanceCount, First, BaseInstance);
 }
 
-GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(
-	GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
+GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(GLenum Mode, GLsizei Count, GLenum Type, const void* Indices, GLsizei InstanceCount, GLint BaseVertex, GLuint BaseInstance)
 {
 	get_context()->set_primitive_topology(::translate_primitive_topology(Mode));
 	get_context()->set_index_buffer_type(::translate_index_type(Type));
 	get_context()->draw_indexed(Count, InstanceCount, (uint32_t)Indices, BaseVertex, BaseInstance);
+}
+
+GLAPI void APIENTRY glBindVertexBuffer(GLuint Bindingindex, VkBuffer Buffer, GLintptr Offset, GLsizei stride) //GLuint Buffer
+{
+	get_context()->bind_vertex_buffer(Buffer, Bindingindex, Offset);
 }
 

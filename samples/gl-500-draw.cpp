@@ -212,10 +212,8 @@ public:
 		vkCmdBindDescriptorSets(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 		vkCmdBindPipeline(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-		VkDeviceSize offsets[1] = { 0 };
-		vkCmdBindVertexBuffers(CommandBuffer, VERTEX_BUFFER_BIND_ID, 1, &vertices.buffer, offsets);
-
-		gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
+		gl5_bind_buffer(GL5_BUFFER_VERTEX, VERTEX_BUFFER_BIND_ID, vertices.buffer, 0, 0, GL5_BUFFER_TYPE_NONE);
+		gl5_bind_buffer(GL5_BUFFER_INDEX, 0, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
 		gl5_draw_indexed(indices.count, 1, 0, 0, 0);
 

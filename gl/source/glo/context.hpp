@@ -37,6 +37,7 @@ namespace glo
 		void submit();
 		void draw(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstVertex, std::uint32_t BaseInstance);
 		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
+		void bind_vertex_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset);
 		void bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
 		void set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects);
 		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);

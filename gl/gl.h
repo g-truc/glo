@@ -108,6 +108,13 @@ GLAPI void APIENTRY glDepthRangeIndexed(GLuint index, GLdouble n, GLdouble f);
 GLAPI void APIENTRY glDrawArraysInstancedBaseInstance(GLenum mode, GLint first, GLsizei count, GLsizei instancecount, GLuint baseinstance);
 GLAPI void APIENTRY glDrawElementsInstancedBaseVertexBaseInstance(GLenum mode, GLsizei count, GLenum type, const void *indices, GLsizei instancecount, GLint basevertex, GLuint baseinstance);
 
+#ifndef GL_VERSION_4_3
+#	define GL_VERSION_4_3 1
+#endif
+
+//GLAPI void APIENTRY glBindVertexBuffer(GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+GLAPI void APIENTRY glBindVertexBuffer(GLuint bindingindex, VkBuffer buffer, GLintptr offset, GLsizei stride);
+
 #ifdef __cplusplus
 }
 #endif
