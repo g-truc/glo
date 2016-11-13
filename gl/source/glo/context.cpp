@@ -38,10 +38,55 @@ namespace glo
 		CommandBufferAllocateInfo.commandBufferCount = this->CommandBuffers.size();
 		Result = vkAllocateCommandBuffers(this->CurrentDevice, &CommandBufferAllocateInfo, &this->CommandBuffers[0]);
 		assert(Result == VK_SUCCESS);
+
+		VkDescriptorSetLayoutBinding DescriptorSetLayoutBinding = {};
+		DescriptorSetLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		DescriptorSetLayoutBinding.descriptorCount = 1;
+		DescriptorSetLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+		DescriptorSetLayoutBinding.pImmutableSamplers = nullptr;
+
+		VkDescriptorSetLayoutCreateInfo DescriptorSetLayoutCreateInfo = {};
+		DescriptorSetLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+		DescriptorSetLayoutCreateInfo.pNext = nullptr;
+		DescriptorSetLayoutCreateInfo.bindingCount = 1;
+		DescriptorSetLayoutCreateInfo.pBindings = &DescriptorSetLayoutBinding;
+		Result = vkCreateDescriptorSetLayout(this->CurrentDevice, &DescriptorSetLayoutCreateInfo, nullptr, &this->CurrentDescriptorSetLayout);
+		assert(Result == VK_SUCCESS);
+
+		VkPipelineLayoutCreateInfo PipelineLayoutCreateInfo = {};
+		PipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		PipelineLayoutCreateInfo.pNext = nullptr;
+		PipelineLayoutCreateInfo.setLayoutCount = 1;
+		PipelineLayoutCreateInfo.pSetLayouts = &this->CurrentDescriptorSetLayout;
+		Result = vkCreatePipelineLayout(this->CurrentDevice, &PipelineLayoutCreateInfo, nullptr, &this->CurrentPipelineLayout);
+		assert(Result == VK_SUCCESS);
+
+		VkDescriptorPoolSize DescriptorPoolSize[1];
+		DescriptorPoolSize[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		DescriptorPoolSize[0].descriptorCount = 1;
+
+		VkDescriptorPoolCreateInfo DescriptorPoolCreateInfo = {};
+		DescriptorPoolCreateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+		DescriptorPoolCreateInfo.pNext = nullptr;
+		DescriptorPoolCreateInfo.poolSizeCount = 1;
+		DescriptorPoolCreateInfo.pPoolSizes = DescriptorPoolSize;
+		DescriptorPoolCreateInfo.maxSets = 1;
+		Result = vkCreateDescriptorPool(this->CurrentDevice, &DescriptorPoolCreateInfo, nullptr, &CurrentDescriptorPool);
+		assert(Result == VK_SUCCESS);
+
+		VkDescriptorSetAllocateInfo DescriptorSetAllocateInfo = {};
+		DescriptorSetAllocateInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+		DescriptorSetAllocateInfo.descriptorPool = this->CurrentDescriptorPool;
+		DescriptorSetAllocateInfo.descriptorSetCount = 1;
+		DescriptorSetAllocateInfo.pSetLayouts = &this->CurrentDescriptorSetLayout;
+		Result = vkAllocateDescriptorSets(this->CurrentDevice, &DescriptorSetAllocateInfo, &this->CurrentDescriptorSet);
+		assert(Result == VK_SUCCESS);
 	}
 
 	context::~context()
 	{
+		vkDestroyPipelineLayout(this->CurrentDevice, this->CurrentPipelineLayout, nullptr);
+		vkDestroyDescriptorSetLayout(this->CurrentDevice, this->CurrentDescriptorSetLayout, nullptr);
 		vkFreeCommandBuffers(this->CurrentDevice, this->CommandPool, 1, &this->CommandBuffers[0]);
 		vkDestroyCommandPool(this->CurrentDevice, this->CommandPool, nullptr);
 	}
@@ -102,13 +147,35 @@ namespace glo
 
 	void context::bind_vertex_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset)
 	{
-		VkDeviceSize offsets[1] = {0};
 		vkCmdBindVertexBuffers(this->CommandBuffers[CurrentCommandBufferIndex], Binding, 1, &Buffer, &Offset);
 	}
 
 	void context::bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType)
 	{
 		vkCmdBindIndexBuffer(this->CommandBuffers[CurrentCommandBufferIndex], Buffer, Offset, IndexType);
+	}
+
+	void context::bind_uniform_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset, VkDeviceSize Range)
+	{
+		assert(Binding == 0);
+
+		//if(this->DescriptorBufferInfo.buffer != Buffer || this->DescriptorBufferInfo.offset != Offset || this->DescriptorBufferInfo.range != Range)
+		{
+			this->DescriptorBufferInfo.buffer = Buffer;
+			this->DescriptorBufferInfo.offset = Offset;
+			this->DescriptorBufferInfo.range = Range;
+
+			VkWriteDescriptorSet WriteDescriptorSet = {};
+			WriteDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			WriteDescriptorSet.dstSet = this->CurrentDescriptorSet;
+			WriteDescriptorSet.descriptorCount = 1;
+			WriteDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			WriteDescriptorSet.pBufferInfo = &this->DescriptorBufferInfo;
+			WriteDescriptorSet.dstBinding = 0;
+			vkUpdateDescriptorSets(this->CurrentDevice, 1, &WriteDescriptorSet, 0, nullptr);
+		}
+
+		vkCmdBindDescriptorSets(this->CommandBuffers[CurrentCommandBufferIndex], VK_PIPELINE_BIND_POINT_GRAPHICS, this->CurrentPipelineLayout, 0, 1, &this->CurrentDescriptorSet, 0, nullptr);
 	}
 
 	void context::set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects)

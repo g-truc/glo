@@ -69,7 +69,12 @@ GLAPI void APIENTRY glScissor(GLint x, GLint y, GLsizei Width, GLsizei Height)
 
 GLAPI void APIENTRY glBindBuffer(GLenum Target, VkBuffer Buffer)//GLuint Buffer)
 {
-	get_context()->bind_buffer(Target, Buffer);
+	get_context()->bind_buffer(Target, Buffer, 0, 0, 0);
+}
+
+GLAPI void APIENTRY glBindBufferRange(GLenum Target, GLuint Index, VkBuffer Buffer, GLintptr Offset, GLsizeiptr Size)
+{
+	get_context()->bind_buffer(Target, Buffer, Index, Offset, Size);
 }
 
 GLAPI void APIENTRY glScissorArrayv(GLuint First, GLsizei Count, GLint const* ScissorArray)

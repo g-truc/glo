@@ -39,7 +39,7 @@ namespace gll
 			this->Invalidated |= INVALIDATED_VIEWPORTS_BIT;
 		}
 
-		void bind_buffer(GLenum Target, VkBuffer Buffer)
+		void bind_buffer(GLenum Target, VkBuffer Buffer, std::uint32_t Binding, uint32_t Offset, uint32_t Range)
 		{
 			switch(Target)
 			{
@@ -47,6 +47,9 @@ namespace gll
 				this->IndexBufferBinding.Buffer = Buffer;
 				this->IndexBufferBinding.Offset = 0;
 				this->Invalidated |= INVALIDATED_BIND_INDEX_BUFFER_BIT;
+				break;
+			case GL_UNIFORM_BUFFER:
+				this->bind_uniform_buffer(Buffer, Binding, Offset, Range);
 				break;
 			default:
 				assert(0);

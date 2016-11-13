@@ -75,6 +75,19 @@ typedef ptrdiff_t GLintptr;
 //GLAPI void APIENTRY glBindBuffer(GLenum target, GLuint buffer);
 GLAPI void APIENTRY glBindBuffer(GLenum target, VkBuffer Buffer);
 
+#ifndef GL_VERSION_3_0
+#	define GL_VERSION_3_0 1
+#endif
+
+//GLAPI void APIENTRY glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size);
+GLAPI void APIENTRY glBindBufferRange(GLenum target, GLuint index, VkBuffer buffer, GLintptr offset, GLsizeiptr size);
+
+#ifndef GL_VERSION_3_1
+#	define GL_VERSION_3_1 1
+#endif
+
+#define GL_UNIFORM_BUFFER                 0x8A11
+
 #ifndef GL_VERSION_3_2
 #	define GL_VERSION_3_2 1
 #endif

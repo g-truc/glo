@@ -39,10 +39,12 @@ namespace glo
 		void draw_indexed(std::uint32_t Count, std::uint32_t InstanceCount, std::uint32_t FirstElement, std::int32_t BaseVertex, std::uint32_t BaseInstance);
 		void bind_vertex_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset);
 		void bind_index_buffer(VkBuffer Buffer, VkDeviceSize Offset, VkIndexType IndexType);
+		void bind_uniform_buffer(VkBuffer Buffer, std::uint32_t Binding, VkDeviceSize Offset, VkDeviceSize Range);
 		void set_dynamic_scissors(std::uint32_t First, std::uint32_t Count, VkRect2D const* Rects);
 		void set_dynamic_viewports(std::uint32_t First, std::uint32_t Count, VkViewport const* Viewports);
 
 		VkCommandBuffer temp_get_command_buffer() const;
+		VkPipelineLayout temp_get_pipeline_layout() const{return this->CurrentPipelineLayout;}
 		void temp_set_queue(VkQueue CurrentQueue){this->CurrentQueue = CurrentQueue;}
 		void temp_set_framebuffer(VkFramebuffer CurrentFramebuffer){this->CurrentFramebuffer = CurrentFramebuffer;}
 		void temp_set_renderpass(VkRenderPass RenderPass, int32_t x, int32_t y, uint32_t Width, uint32_t Height)
@@ -77,11 +79,17 @@ namespace glo
 		VkCommandPool CommandPool;
 		std::array<VkCommandBuffer, 3> CommandBuffers;
 
-		VkDevice CurrentDevice;
-		VkQueue CurrentQueue;
-		VkFramebuffer CurrentFramebuffer;
+		VkDevice CurrentDevice = VK_NULL_HANDLE;
+		VkQueue CurrentQueue = VK_NULL_HANDLE;
+		VkFramebuffer CurrentFramebuffer = VK_NULL_HANDLE;
 		render_pass CurrentRenderPass;
-		uint32_t CurrentCommandBufferIndex;
+		VkDescriptorPool CurrentDescriptorPool = VK_NULL_HANDLE;
+		VkDescriptorSetLayout CurrentDescriptorSetLayout;
+		VkDescriptorSet CurrentDescriptorSet = VK_NULL_HANDLE;
+		VkPipelineLayout CurrentPipelineLayout = VK_NULL_HANDLE;
+		uint32_t CurrentCommandBufferIndex = 0;
+
+		VkDescriptorBufferInfo DescriptorBufferInfo{}; // Cache
 
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;
 	};
