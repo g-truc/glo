@@ -58,7 +58,8 @@ inline gl5_viewport gl5_make_viewport(float x, float y, float Width, float Heigh
 
 enum gl5_buffer_target
 {
-	GL5_BUFFER_INDEX
+	GL5_BUFFER_INDEX,
+	GL5_BUFFER_VERTEX
 };
 
 enum gl5_buffer_type

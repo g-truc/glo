@@ -58,6 +58,7 @@ private:
 	PFN_vkGetSwapchainImagesKHR fpGetSwapchainImagesKHR;
 	PFN_vkAcquireNextImageKHR fpAcquireNextImageKHR;
 	PFN_vkQueuePresentKHR fpQueuePresentKHR;
+
 public:
 	VkFormat colorFormat;
 	VkColorSpaceKHR colorSpace;

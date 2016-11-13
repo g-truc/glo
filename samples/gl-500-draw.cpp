@@ -195,27 +195,13 @@ public:
 		VK_CHECK_RESULT(vkWaitForFences(device, 1, &waitFences[currentBuffer], VK_TRUE, UINT64_MAX));
 		VK_CHECK_RESULT(vkResetFences(device, 1, &waitFences[currentBuffer]));
 
+		glo::context* Context = (glo::context*)this->Context;
+		Context->temp_set_framebuffer(frameBuffers[currentBuffer]);
+		Context->temp_set_renderpass(renderPass, 0, 0, width, height);
+
 		wglMakeCurrentGTC(this->DeviceContext, this->Context);
 
-		glo::context* Context = (glo::context*)wglGetCurrentContextGTC();
 		VkCommandBuffer CommandBuffer = Context->temp_get_command_buffer();
-
-		VkClearValue clearValues[2];
-		clearValues[0].color = { { 0.1f, 0.1f, 0.1f, 1.0f } };
-		clearValues[1].depthStencil = { 1.0f, 0 };
-
-		VkRenderPassBeginInfo RenderPassBeginInfo = {};
-		RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-		RenderPassBeginInfo.pNext = nullptr;
-		RenderPassBeginInfo.renderPass = renderPass;
-		RenderPassBeginInfo.renderArea.offset.x = 0;
-		RenderPassBeginInfo.renderArea.offset.y = 0;
-		RenderPassBeginInfo.renderArea.extent.width = width;
-		RenderPassBeginInfo.renderArea.extent.height = height;
-		RenderPassBeginInfo.clearValueCount = 2;
-		RenderPassBeginInfo.pClearValues = clearValues;
-		RenderPassBeginInfo.framebuffer = frameBuffers[currentBuffer];
-		vkCmdBeginRenderPass(CommandBuffer, &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		gl5_viewport const Viewport = gl5_make_viewport(0, 0, width, height, 0.0f, 1.0f);
 		gl5_viewports(0, 1, &Viewport);
@@ -232,8 +218,6 @@ public:
 		gl5_bind_buffer(GL5_BUFFER_INDEX, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
 		gl5_draw_indexed(indices.count, 1, 0, 0, 0);
-
-		vkCmdEndRenderPass(CommandBuffer);
 
 		gl5_flush();
 

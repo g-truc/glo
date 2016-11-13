@@ -43,6 +43,15 @@ namespace glo
 
 		VkCommandBuffer temp_get_command_buffer() const;
 		void temp_set_queue(VkQueue CurrentQueue){this->CurrentQueue = CurrentQueue;}
+		void temp_set_framebuffer(VkFramebuffer CurrentFramebuffer){this->CurrentFramebuffer = CurrentFramebuffer;}
+		void temp_set_renderpass(VkRenderPass RenderPass, int32_t x, int32_t y, uint32_t Width, uint32_t Height)
+		{
+			this->CurrentRenderPass.RenderPass = RenderPass;
+			this->CurrentRenderPass.RenderArea.offset.x = x;
+			this->CurrentRenderPass.RenderArea.offset.y = y;
+			this->CurrentRenderPass.RenderArea.extent.width = Width;
+			this->CurrentRenderPass.RenderArea.extent.height = Height;
+		}
 
 	protected:
 		enum
@@ -56,6 +65,12 @@ namespace glo
 		pipeline_desc CurrentPipelineDesc;
 
 	private:
+		struct render_pass
+		{
+			VkRenderPass RenderPass;
+			VkRect2D RenderArea;
+		};
+
 		void validate_pipeline();
 
 		VkCommandPool CommandPool;
@@ -63,6 +78,8 @@ namespace glo
 
 		VkDevice CurrentDevice;
 		VkQueue CurrentQueue;
+		VkFramebuffer CurrentFramebuffer;
+		render_pass CurrentRenderPass;
 		uint32_t CurrentCommandBufferIndex;
 
 		std::vector<VkDescriptorSetLayoutBinding> CurrentDescriptorDesc;

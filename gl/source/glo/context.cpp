@@ -60,10 +60,26 @@ namespace glo
 		CommandBufferBeginInfo.pNext = nullptr;
 		Result = vkBeginCommandBuffer(this->CommandBuffers[CurrentCommandBufferIndex], &CommandBufferBeginInfo);
 		assert(Result == VK_SUCCESS);
+
+		VkClearValue clearValues[2];
+		clearValues[0].color = {{0.1f, 0.1f, 0.1f, 1.0f}};
+		clearValues[1].depthStencil = {1.0f, 0};
+
+		VkRenderPassBeginInfo RenderPassBeginInfo = {};
+		RenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+		RenderPassBeginInfo.pNext = nullptr;
+		RenderPassBeginInfo.renderPass = CurrentRenderPass.RenderPass;
+		RenderPassBeginInfo.renderArea = CurrentRenderPass.RenderArea;
+		RenderPassBeginInfo.clearValueCount = 2;
+		RenderPassBeginInfo.pClearValues = clearValues;
+		RenderPassBeginInfo.framebuffer = this->CurrentFramebuffer;
+		vkCmdBeginRenderPass(this->CommandBuffers[CurrentCommandBufferIndex], &RenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 	}
 
 	void context::submit()
 	{
+		vkCmdEndRenderPass(this->CommandBuffers[CurrentCommandBufferIndex]);
+
 		VkResult Result = vkEndCommandBuffer(this->CommandBuffers[CurrentCommandBufferIndex]);
 		assert(Result == VK_SUCCESS);
 	}
