@@ -52,10 +52,7 @@ public:
 		glm::mat4 viewMatrix;
 	} uboVS;
 
-	//VkPipelineLayout pipelineLayout;
 	VkPipeline pipeline;
-	//VkDescriptorSetLayout descriptorSetLayout;
-	//VkDescriptorSet descriptorSet;
 	VkSemaphore presentCompleteSemaphore;
 	VkSemaphore renderCompleteSemaphore;
 
@@ -85,9 +82,6 @@ public:
 	~gl_450_draw()
 	{
 		vkDestroyPipeline(device, pipeline, nullptr);
-
-		//vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-		//vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
 		vkDestroyBuffer(device, vertices.buffer, nullptr);
 		vkFreeMemory(device, vertices.memory, nullptr);

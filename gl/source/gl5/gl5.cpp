@@ -42,6 +42,10 @@ void gl5_bind_buffer(gl5_buffer_target Target, uint32_t Binding, VkBuffer Buffer
 		assert(Binding == 0);
 		get_context()->bind_index_buffer(Buffer, Offset, ::translate_index_type(Type));
 		break;
+	case GL5_BUFFER_UNIFORM:
+		assert(Binding == 0);
+		get_context()->bind_uniform_buffer(Buffer, Binding, Offset, Range);
+		break;
 	default:
 		assert(0);
 	}

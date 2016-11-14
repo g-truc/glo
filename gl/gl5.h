@@ -59,14 +59,15 @@ inline gl5_viewport gl5_make_viewport(float x, float y, float Width, float Heigh
 enum gl5_buffer_target
 {
 	GL5_BUFFER_INDEX,
-	GL5_BUFFER_VERTEX
+	GL5_BUFFER_VERTEX,
+	GL5_BUFFER_UNIFORM
 };
 
 enum gl5_buffer_type
 {
 	GL5_BUFFER_TYPE_UINT16 = 0,
 	GL5_BUFFER_TYPE_UINT32 = 1,
-	GL5_BUFFER_TYPE_NONE = 2
+	GL5_BUFFER_TYPE_RAW = 2
 };
 
 void gl5_draw(uint32_t Count, uint32_t InstanceCount,  uint32_t FirstVertex, uint32_t BaseInstance);

@@ -50,10 +50,7 @@ public:
 		glm::mat4 viewMatrix;
 	} uboVS;
 
-	VkPipelineLayout pipelineLayout;
 	VkPipeline pipeline;
-	VkDescriptorSetLayout descriptorSetLayout;
-	VkDescriptorSet descriptorSet;
 	VkSemaphore presentCompleteSemaphore;
 	VkSemaphore renderCompleteSemaphore;
 
@@ -83,9 +80,6 @@ public:
 	~gl_500_draw()
 	{
 		vkDestroyPipeline(device, pipeline, nullptr);
-
-		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
-		vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
 
 		vkDestroyBuffer(device, vertices.buffer, nullptr);
 		vkFreeMemory(device, vertices.memory, nullptr);
@@ -209,10 +203,10 @@ public:
 		gl5_rect const Rect = gl5_make_rect(0, 0, width, height);
 		gl5_scissors(0, 1, &Rect);
 
-		vkCmdBindDescriptorSets(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSet, 0, nullptr);
 		vkCmdBindPipeline(CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline);
 
-		gl5_bind_buffer(GL5_BUFFER_VERTEX, VERTEX_BUFFER_BIND_ID, vertices.buffer, 0, 0, GL5_BUFFER_TYPE_NONE);
+		gl5_bind_buffer(GL5_BUFFER_UNIFORM, 0, uniformDataVS.buffer, 0, sizeof(uboVS), GL5_BUFFER_TYPE_RAW);
+		gl5_bind_buffer(GL5_BUFFER_VERTEX, VERTEX_BUFFER_BIND_ID, vertices.buffer, 0, 0, GL5_BUFFER_TYPE_RAW);
 		gl5_bind_buffer(GL5_BUFFER_INDEX, 0, indices.buffer, 0, 0, GL5_BUFFER_TYPE_UINT32);
 
 		gl5_draw_indexed(indices.count, 1, 0, 0, 0);
@@ -399,69 +393,6 @@ public:
 		vertices.inputState.pVertexAttributeDescriptions = vertices.inputAttributes.data();
 	}
 
-	void setupDescriptorPool()
-	{
-		VkDescriptorPoolSize typeCounts[1];
-		typeCounts[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		typeCounts[0].descriptorCount = 1;
-
-		VkDescriptorPoolCreateInfo descriptorPoolInfo = {};
-		descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		descriptorPoolInfo.pNext = nullptr;
-		descriptorPoolInfo.poolSizeCount = 1;
-		descriptorPoolInfo.pPoolSizes = typeCounts;
-		descriptorPoolInfo.maxSets = 1;
-
-		VK_CHECK_RESULT(vkCreateDescriptorPool(device, &descriptorPoolInfo, nullptr, &descriptorPool));
-	}
-
-	void setupDescriptorSetLayout()
-	{
-		VkDescriptorSetLayoutBinding layoutBinding = {};
-		layoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		layoutBinding.descriptorCount = 1;
-		layoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-		layoutBinding.pImmutableSamplers = nullptr;
-
-		VkDescriptorSetLayoutCreateInfo descriptorLayout = {};
-		descriptorLayout.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		descriptorLayout.pNext = nullptr;
-		descriptorLayout.bindingCount = 1;
-		descriptorLayout.pBindings = &layoutBinding;
-
-		VK_CHECK_RESULT(vkCreateDescriptorSetLayout(device, &descriptorLayout, nullptr, &descriptorSetLayout));
-
-		VkPipelineLayoutCreateInfo pPipelineLayoutCreateInfo = {};
-		pPipelineLayoutCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-		pPipelineLayoutCreateInfo.pNext = nullptr;
-		pPipelineLayoutCreateInfo.setLayoutCount = 1;
-		pPipelineLayoutCreateInfo.pSetLayouts = &descriptorSetLayout;
-
-		VK_CHECK_RESULT(vkCreatePipelineLayout(device, &pPipelineLayoutCreateInfo, nullptr, &pipelineLayout));
-	}
-
-	void setupDescriptorSet()
-	{
-		VkDescriptorSetAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		allocInfo.descriptorPool = descriptorPool;
-		allocInfo.descriptorSetCount = 1;
-		allocInfo.pSetLayouts = &descriptorSetLayout;
-
-		VK_CHECK_RESULT(vkAllocateDescriptorSets(device, &allocInfo, &descriptorSet));
-
-		VkWriteDescriptorSet writeDescriptorSet = {};
-
-		writeDescriptorSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		writeDescriptorSet.dstSet = descriptorSet;
-		writeDescriptorSet.descriptorCount = 1;
-		writeDescriptorSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		writeDescriptorSet.pBufferInfo = &uniformDataVS.descriptor;
-		writeDescriptorSet.dstBinding = 0;
-
-		vkUpdateDescriptorSets(device, 1, &writeDescriptorSet, 0, nullptr);
-	}
-
 	void setupDepthStencil()
 	{
 		VkImageCreateInfo image = {};
@@ -595,9 +526,11 @@ public:
 
 	void preparePipelines()
 	{
+		glo::context* Context = (glo::context*)this->Context;
+
 		VkGraphicsPipelineCreateInfo pipelineCreateInfo = {};
 		pipelineCreateInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-		pipelineCreateInfo.layout = pipelineLayout;
+		pipelineCreateInfo.layout = Context->temp_get_pipeline_layout();
 		pipelineCreateInfo.renderPass = renderPass;
 
 		VkPipelineInputAssemblyStateCreateInfo inputAssemblyState = {};
@@ -723,10 +656,7 @@ public:
 		prepareSynchronizationPrimitives();
 		prepareVertices(USE_STAGING);
 		prepareUniformBuffers();
-		setupDescriptorSetLayout();
 		preparePipelines();
-		setupDescriptorPool();
-		setupDescriptorSet();
 		prepared = true;
 	}
 
