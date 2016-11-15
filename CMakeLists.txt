@@ -9,6 +9,7 @@ project(${NAME})
 include_directories(external)
 include_directories(external/glm)
 include_directories(external/gli)
+include_directories(external/cityhash)
 
 find_library(VULKAN_LIB NAMES vulkan-1 vulkan PATHS ${CMAKE_SOURCE_DIR}/external/vulkan)
 
