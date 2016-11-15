@@ -22,7 +22,7 @@ source_group("GLO Files" FILES ${GLO_SOURCE} ${GLO_INLINE} ${GLO_HEADER})
 
 file(GLOB_RECURSE EXTERNAL_CITYHASH_SOURCE ../../externel/cityhash/*.cc)
 file(GLOB_RECURSE EXTERNAL_CITYHASH_HEADER ../../externel/cityhash/*.h)
-source_group("External Files" FILES ${EXTERNAL_SOURCE} ${EXTERNAL_HEADER})
+source_group("External Files/CityHash" FILES ${EXTERNAL_SOURCE} ${EXTERNAL_HEADER})
 
 add_library(glo STATIC
 	${GLO_PUBLIC} ${TXT_PUBLIC}
